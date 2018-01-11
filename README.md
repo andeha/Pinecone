@@ -1,2 +1,2 @@
 # Pinecone
-A library operating system
+A library operating system.
