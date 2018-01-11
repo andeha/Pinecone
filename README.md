@@ -1,2 +1,2 @@
 # Pinecone
-A library operating system.
+An operating system for embedded experiments and robotics.
