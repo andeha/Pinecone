@@ -138,7 +138,7 @@
 
  void
  Base(
-      __builtin_uint_t n,
+      __builtin_uint_t z,
       unsigned base, unsigned numeralsOrZero,
       void (^progress)(char c));
 

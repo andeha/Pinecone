@@ -118,7 +118,7 @@ Roman(
 
 void
 Base( // TeX §64, §65 and §67
-     __builtin_uint_t n,
+     __builtin_uint_t z,
      unsigned base,
      unsigned numeralsOrZero,
      void (^progress)(char c)
@@ -129,7 +129,7 @@ Base( // TeX §64, §65 and §67
         else { progress('a' - 10 + c); }
     };
     char k = 0; char buf[64] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    do { buf[k] = n % base; n = n/base; k++; } while (n != 0);
+    do { buf[k] = z % base; z = z/base; k++; } while (z != 0);
     for (int i = numeralsOrZero ? numeralsOrZero - 1 : k - 1; i >= 0; i--)
         printDigit(buf[i], progress);
 }
