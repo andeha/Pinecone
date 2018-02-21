@@ -133,13 +133,13 @@
  void
  Base(
       __builtin_int_t n, 
-      unsigned base, unsigned numeralsOrZero,
+      unsigned int base, unsigned int numeralsOrZero,
       void (^progress)(char c));
 
  void
  Base(
       __builtin_uint_t z,
-      unsigned base, unsigned numeralsOrZero,
+      unsigned int base, unsigned int numeralsOrZero,
       void (^progress)(char c));
 
 /**   ⃨ and now with the IEEE754 base-2 floating point. */
