@@ -4,7 +4,7 @@
 Welcome to *Pinecone*, the library operating system for your next internet of things project, embedded experiment or robotics prototype. The library comprises of a run-time with:
 
 - Dynamically resizable memory regions
-- Unicode-, utf-8 and decorated strings (and terminal I/O for the different string types)
+- Unicode-, utf-8 and decorated strings (and terminal I/O for decorated strings)
 - Memory-mapped files (`abduct` and `reflect`)
 - The *pimpl* idiom, `Optional` and `Tuple` classes
 - Slim `Vector` and `Map` container templates
