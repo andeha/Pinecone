@@ -388,7 +388,7 @@ extern "C" { extern const char *tab; extern const char *eol; extern const char
 
 typedef __builtin_uint_t metaaddress; struct MemoryRegionDelegate;
 
-template <typename T> struct NonarithmeticPointer { T pointer; };
+template <typename T> struct SemanticPointer { T pointer; };
 // ⤤ Do not cast this type back to any other type of pointer
 
 struct MemoryRegion {
@@ -402,7 +402,7 @@ struct MemoryRegion {
     
     int exclude(metaaddress start, __builtin_int_t bytes);
     
-    NonarithmeticPointer<void *> pointer(__builtin_int_t byte);
+    SemanticPointer<void *> pointer(__builtin_int_t byte);
     
     __builtin_int_t bytes();
     
@@ -426,7 +426,7 @@ struct MemoryRegion {
     
 #pragma mark Iterator
     
-    int forall(void (^block)(NonarithmeticPointer<uint8_t *> p, bool first,
+    int forall(void (^block)(SemanticPointer<uint8_t *> p, bool first,
       bool last, __builtin_int_t index, bool& stop));
     
 #pragma mark Conveniences
@@ -455,10 +455,10 @@ struct MemoryRegion {
 😐;
 
 struct MemoryRegionDelegate {
-    virtual void first(MemoryRegion * region, NonarithmeticPointer<void *> current) = 0;
-    virtual void next(MemoryRegion * region, NonarithmeticPointer<void *> current, NonarithmeticPointer<void *> later) = 0;
-    virtual void prev(MemoryRegion * region, NonarithmeticPointer<void *> current, NonarithmeticPointer<void *> later) = 0;
-    virtual void last(MemoryRegion * region, NonarithmeticPointer<void *> current) = 0;
+    virtual void first(MemoryRegion * region, SemanticPointer<void *> current) = 0;
+    virtual void next(MemoryRegion * region, SemanticPointer<void *> current, SemanticPointer<void *> later) = 0;
+    virtual void prev(MemoryRegion * region, SemanticPointer<void *> current, SemanticPointer<void *> later) = 0;
+    virtual void last(MemoryRegion * region, SemanticPointer<void *> current) = 0;
 };
 
 __builtin_int_t SystemInfoPageSize();
