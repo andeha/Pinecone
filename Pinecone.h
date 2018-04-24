@@ -408,7 +408,7 @@ struct MemoryRegion {
     
     __builtin_int_t blocks();
     
-    void alsoAtDealloc(void (^deferral)());
+    void alsoAtDealloc(void (^deferral)()); // ☜😐: 🛵𝜆
     
 #pragma mark (the unsigned) Mitigate
     
