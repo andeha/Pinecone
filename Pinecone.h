@@ -396,12 +396,12 @@ struct MemoryRegion {
     MemoryRegion(MemoryRegionDelegate * delegate = NULL);
     
     int incorporate(void *virtue, __builtin_int_t bytes, metaaddress loc);
-
+    
     int inject(__builtin_int_t index, MemoryRegion sub, void *(^ allocate)
       (__builtin_int_t bytes) = ^(__builtin_int_t b) { return malloc(b); } );
-  
+    
     int exclude(metaaddress start, __builtin_int_t bytes);
-
+    
     NonarithmeticPointer<void *> pointer(__builtin_int_t byte);
     
     __builtin_int_t bytes();
@@ -409,12 +409,12 @@ struct MemoryRegion {
     __builtin_int_t blocks();
     
     void alsoAtDealloc(void (^deferral)());
-        
+    
 #pragma mark (the unsigned) Mitigate
-
-	Tuple<MemoryRegion, MemoryRegion> attach(metaaddress loc) const;
-
-	Tuple<MemoryRegion, MemoryRegion> detach(metaaddress loc, void *(^allocate)
+    
+    Tuple<MemoryRegion, MemoryRegion> attach(metaaddress loc) const;
+    
+    Tuple<MemoryRegion, MemoryRegion> detach(metaaddress loc, void *(^allocate)
       (__builtin_int_t bytes)) const;
     
 #pragma mark Little and Big Endians
@@ -423,19 +423,19 @@ struct MemoryRegion {
     
     INLINED void toggleNetworkAndNative(void (^completion)(__builtin_int_t
       bytes)) const; // REQ: O(1)
-
+    
 #pragma mark Iterator
     
     int forall(void (^block)(NonarithmeticPointer<uint8_t *> p, bool first,
       bool last, __builtin_int_t index, bool& stop));
     
 #pragma mark Conveniences
-
+    
     static Optional<MemoryRegion> abduct(__builtin_int_t bytes,
       MemoryRegionDelegate *delegate = NULL, bool allowWrites = true,
       void *(^allocate)(__builtin_int_t bytes) = ^(__builtin_int_t bytes) {
         return malloc(bytes); });
-
+    
     static Optional<MemoryRegion> reflect(const char * utf8Filepath,
       __builtin_int_t pagesOffset = 0, __builtin_int_t pagesLength = -1,
       MemoryRegionDelegate * delegate = NULL, bool allowWrites = false,
@@ -448,12 +448,12 @@ struct MemoryRegion {
         if (bytes() == 0 || get<1>(regions).bytes() != 0) { return Optional<
           MemoryRegion>(get<1>(regions)); } return Optional<MemoryRegion>::no();
     };
-
+    
     void append(__builtin_int_t bytes, void *(^allocate)(__builtin_int_t bytes)
       = ^(__builtin_int_t bytes) { return malloc(bytes); });
-
-😐;
     
+😐;
+
 struct MemoryRegionDelegate {
     virtual void first(MemoryRegion * region, NonarithmeticPointer<void *> current) = 0;
     virtual void next(MemoryRegion * region, NonarithmeticPointer<void *> current, NonarithmeticPointer<void *> later) = 0;
@@ -462,7 +462,7 @@ struct MemoryRegionDelegate {
 };
 
 __builtin_int_t SystemInfoPageSize();
-    
+
 #include <System.h>
 
 #endif
