@@ -3,7 +3,7 @@
 //  Pinecone
 //
 
-#include <PineconeLite/Helpers.h>
+#include <Additions/Helpers.h>
 
 bool
 IsPowerOfTwo(

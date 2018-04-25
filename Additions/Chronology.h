@@ -1,32 +1,32 @@
 //
 //  Chronology.h
-//  Pinecone
+//  Pinecone Additions
 //
 
 #ifndef __CHRONOLOGY_H
 #define __CHRONOLOGY_H
 
-#include <PineconeLite/Pinecone.h>
+#include <Pinecone.h>
 
 /**
- 
+     
      Timestamps, timezones, calendric increments and NTP clock synchronization.
      Calendric computations are similar yet not 'too similar' to the Gregorian
      calendar.
- 
+     
      With 'prompt> sysctl', note kern.clockrates { hz = 100, tick = 10000,
      tickadj = 2, profhz = 100, stathz = 100 } as in the
- 
+     
         [], 😐😐, 😐😐😐😐, ...  but sometimes fortunately no 😐😐😐.
- 
+     
      pattern.
- 
+     
  */
 
 struct Chronology {
     
     /**
-        
+     
      A @c Timestamp represents a 136 year interval (an era), with an 𝜖 equal
      to 232 ps.  Prime epoch defined as 0am, 1 January 1900.
      
@@ -37,7 +37,7 @@ struct Chronology {
     typedef uint64_t Timestamp;
     
     /**
-        
+     
      In this class, a timezone alters the instant with a positive or negative
      number of hours.
      
@@ -215,7 +215,7 @@ ENCLAVED Chronology& MonotonicallyIncreasingChronology();
 // TODO: /consider adding a strictly monotonically increasing chronology and investigate its relationship to chip area. Also its application when increasing probability for hard RT.
 
 #pragma mark - Scheduled Sequent
-    
+
 FOCAL
 ENCLAVED
 int

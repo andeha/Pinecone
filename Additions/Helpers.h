@@ -6,7 +6,7 @@
 #ifndef __HELPERS_H
 #define __HELPERS_H
 
-#include <PineconeLite/Pinecone.h>
+#include <Pinecone.h>
 
 #pragma mark Inceptives
 
