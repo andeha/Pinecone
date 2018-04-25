@@ -39,9 +39,9 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
         à ⬷ The letter 'a'+'COMBINING GRAVE ACCENT'. See ACUTE and CIRCUMFLEX
         a͟͞z͟͞ ⬷ 'Combining double-macaron' or the 'Bitfields' macraron'.
         L̵ ⬷ L and 'Combining short stroke overlay'
-        a⃝ ⬷ The letter 'a' + "COMBINING ENCLOSING CIRCLE'
+        a⃝ ⬷ The letter 'a' + "COMBINING ENCLOSING CIRCLE"
         ℹ︎ ⬷ 'Information source'
-        i⃝ ⬷ The letter 'i' + "COMBINING ENCLOSING CIRCLE'
+        i⃝ ⬷ The letter 'i' + "COMBINING ENCLOSING CIRCLE"
          ⃒⃘ ⬷ 'Combining long vertical line' and 'ring overlay'
         c⃥ ⬷ 'Combining reverse solidus overlay'
          ⃫ ⬷ 'COMBINING LONG SOLIDUS OVERLAY'
@@ -389,7 +389,7 @@ extern "C" { extern const char *tab; extern const char *eol; extern const char
 
 typedef __builtin_uint_t metaaddress; struct MemoryRegionDelegate;
 
-template <typename T> struct SemanticPointer { T pointer; };
+template <typename T> struct SemanticPointer { T pointer; }; // ⬷ Non-arithmetic
 // ⤤ Do not cast this type back to any other type of pointer
 
 struct MemoryRegion {
@@ -443,7 +443,7 @@ struct MemoryRegion {
       void *(^allocate)(__builtin_int_t bytes) = ^(__builtin_int_t bytes) {
         return malloc(bytes); });
     
-    Optional<MemoryRegion> clone(void *(^allocate)(__builtin_int_t bytes) = ^( // TODO: Move to base implementation.
+    Optional<MemoryRegion> clone(void *(^allocate)(__builtin_int_t bytes) = ^( // TODO: Move to base?
       __builtin_int_t bytes) { return malloc(bytes); } ) {
         Tuple<MemoryRegion, MemoryRegion> regions = detach(0, allocate);
         if (bytes() == 0 || get<1>(regions).bytes() != 0) { return Optional<
