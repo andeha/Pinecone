@@ -106,17 +106,19 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
     ⇥ Tab Arrow
  
    Spaces: ⇀ ↽ (en space), ⇀  ↽ (em space), ⇀ ↽ (Three-per-em space), ⇀ ↽ (Four
-   per em-space), ⇀ ↽ (Six-per-em), ⇀ ↽ (Figure space), ⇀ ↽ (Punctuation space),
-   ⇀ ↽ (Thin space), ⇀ ↽ (Hair space), ⇀ ​↽ (Zero width space), ⇀ ↽ (Narrow no-
-   break space), ⇀ ↽ (Medium mathematical space), ⇀　↽ (Ideographic space), ⇀〿↽
-   (Ideographic half-fill space). ␣ (Knuths' Constant.)
+     per em-space), ⇀ ↽ (Six-per-em), ⇀ ↽ (Figure space), ⇀ ↽ (Punctuation space),
+     ⇀ ↽ (Thin space), ⇀ ↽ (Hair space), ⇀ ​↽ (Zero width space), ⇀ ↽ (Narrow no-
+     break space), ⇀ ↽ (Medium mathematical space), ⇀　↽ (Ideographic space), ⇀〿↽
+     (Ideographic half-fill space). ␣ (Knuths' Constant.)
  
  *␣///}✂️ >> --<myShoebox>{Utf-8 Control Codes} */
+
+#pragma mark - Reverse Engineering and Export Tables (prompt> nm -help)
 
 #define INLINED __attribute__((always_inline))
 #define MACRO inline INLINED
 // Macros for .cpp and .cxx files, e.g exclude symbols from an export table.
-// INNER_STRUCT actually affects all methods/static data members in decorated.
+// INNER_STRUCT actually affects all methods/static data members in decorated?
 #define INNER_STRUCT struct __attribute__((internal_linkage))
 #define INNER_DATA static __attribute__((internal_linkage))
 #define INNER_FUNCTION static __attribute__((internal_linkage))
@@ -339,6 +341,7 @@ extern jmp_buf2 _envBuffer;
 #define ENCLAVED
 #define DONT_REQUIRE_SIGNBIT
 #define TRANSMOGRIFYING
+#define µA(measured,envisioned)
 
 #pragma mark - Pleasure Cycles
 
