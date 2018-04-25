@@ -87,7 +87,7 @@ To create a vector, write:
     Vector<int> v = { 3, 2, 1 };
     int second = v[1];
     
-More examples are available in the `UnitTests` directory.
+Additional examples are available in the `UnitTests` directory.
 
 ## References
 
