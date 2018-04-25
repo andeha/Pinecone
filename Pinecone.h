@@ -14,7 +14,7 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
 /**
  
     Utf-8 Non-regulars: .*｟｠ ⃦ ('Combining double vertical stroke overlay' or
-        'fat-pipe') ✚ ★ ‽ ⸺ \ 𐤟 (The phoenician word separator?) ↩︎ ↹
+        'fat-pipe') ✚ ★ ‽ ⸺ \ 𐤟 (PHOENICIAN WORD SEPARATOR) ↩︎ ↹
     Example: ｟↹↩︎｠★
     Logic and one-liners: ≅ ≠ ⋍ ~ ⟶ ⟷ ⊂⊄⊆⊈ ⊃ (Małuszyński inclusion) ∩∪ ∈∉
         ¬∧∨ ≤≥ ≰ ≱ ∞ ∀∃∄ ⊨ ∅ 𝜖 √ ∑∏ ∂𝜕∆ ∇𝛻 ∫∬∭ ¶
@@ -48,17 +48,17 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
  
    Footnotes, references and (enum.) lists: ¹₁²₂³₃⁴₄⁵₅⁶₆⁷₇⁸₈⁹₉⁰₀ •○◦・•⁃⦾⦿‣⁌⁍
  
-    ╮  ╯ ╭ ╰ ╱ ╲ ╳     ┤ ┌ ├ ┼ ┘ ┐ ─ │ ┴ ┬    ╴╵╷╴
+     ╮  ╯ ╭ ╰ ╱ ╲ ╳     ┤ ┌ ├ ┼ ┘ ┐ ─ │ ┴ ┬    ╴╵╷╴
  
-     Key   Value   ∃
-    ┾━━━╈━━━━━━━━━┿━┽           ⌏  ⌎   ⌜  ⌝ ⌖  ⏚
-    │k₁ ┃         │✓│           ⌍  ⌌   ⌞  ⌟ ‖
-    └───┸─────────┴─┘
+      Key   Value   ∃
+     ┾━━━╈━━━━━━━━━┿━┽           ⌏  ⌎   ⌜  ⌝  ⌖  ⏚
+     │k₁ ┃         │✓│           ⌍  ⌌   ⌞  ⌟  ‖
+     └───┸─────────┴─┘
  
-        ┌def┐
-        │   │                     ╭─ Leaf 1 ──╮
-   ─abc─┘─┐ ┘           ── Stem ──┤           ├── Again ──
-          └                       ╰─ Leaf 2 ──╯
+          ┌def┐
+          │   │                     ╭─ Leaf 1 ──╮
+     ─abc─┘─┐ ┘           ── Stem ──┤           ├── Again ──
+            └                       ╰─ Leaf 2 ──╯
  
     „ ⃨as illustrated below or above:‟
  
@@ -74,49 +74,49 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
  
    Further, consider:
  
- Dashes: ‒ Figure Dash, – En Dash, — Em Dash, ⁓ Swung Dash, ⸺ Two-em Dash,
+   Dashes: ‒ Figure Dash, – En Dash, — Em Dash, ⁓ Swung Dash, ⸺ Two-em Dash,
         ⸻ Three-em Dash, 〰 Wavy Dash, - Hyphen Minus.
  
- Arrows: ⇽ ⇾ ⟲⟳ ↗︎↘︎↙︎↖︎ ⸔⸕ ⤡⤢ ⤺⤻ ↰↱↲↳ ↴ ↩︎ ↵  ⮐ ↹ ←↑→↓
+   Arrows: ⇽ ⇾ ⟲⟳ ↗︎↘︎↙︎↖︎ ⸔⸕ ⤡⤢ ⤺⤻ ↰↱↲↳ ↴ ↩︎ ↵  ⮐ ↹ ←↑→↓
     ↼ (Leftward harpoon with barb upwards) ↽↾↿⇀⇁⇂⇃⇄⇅⇆⇇⇈⇉⇊⇋⇌⇍⇏⇐⇑⇒⇓⇚⇛⇜⇝⇤⇥⇦⇧⇨
- ⇩⇪⇵⇶ ⎔ ➔➙➛➜➝➞➟➠⟰⟤⟥ ⤶ ⤷  ↔︎
- 📲📩📈📉🔃➡︎⬅︎⬆︎⬇︎↩︎⤴︎⤵︎⤴⤵ (牮筏) ⬷ ⤐ (Leftwards two-headed triple dash arrow)
+    ⇩⇪⇵⇶ ⎔ ➔➙➛➜➝➞➟➠⟰⟤⟥ ⤶ ⤷  ↔︎
+   📲📩📈📉🔃➡︎⬅︎⬆︎⬇︎↩︎⤴︎⤵︎⤴⤵ (牮筏) ⬷ ⤐ (Leftwards two-headed triple dash arrow)
  
- Extensions: ⁌⁍ ⊸ ⫰ ⫱ ⿱⿳⿶  ⃦ a⃮ b⃯ a͍ (Combining left and right arrow below),
-    a̫b̫c̫ ⬷ 'Combining inverted double arch below' a⃨b⃨c⃨ a⃩ a⃪
-    1゚ (Combining Katakana Sound Mark)
-    a ⃫b (Combining long double solidus overlay)
-    aᷣ (Combining latin small letter R rotund)
-    a⳯b⳰c⳱ (The Coptics)
-    ˥ ˦ ˧ ˨ ˩ (Tone letters)
+   Extensions: ⁌⁍ ⊸ ⫰ ⫱ ⿱⿳⿶  ⃦ a⃮ b⃯ a͍ (Combining left and right arrow below),
+     a̫b̫c̫ ⬷ 'Combining inverted double arch below' a⃨b⃨c⃨ a⃩ a⃪
+     1゚ (Combining Katakana Sound Mark)
+     a ⃫b (Combining long double solidus overlay)
+     aᷣ (Combining latin small letter R rotund)
+     a⳯b⳰c⳱ (The Coptics)
+     ˥ ˦ ˧ ˨ ˩ (Tone letters)
  
-  Symbol String  Utf-8           Unicode Name
+    Symbol  c-char  Utf-8          Unicode Name
        ␜  "\u241C" 0xE2 0x90 0x9C SYMBOL FOR FILE SEPARATOR
        ␝  "\u241D" 0xE2 0x90 0x9D SYMBOL FOR GROUP SEPARATOR
        ␞  "\u241E" 0xE2 0x90 0x9E SYMBOL FOR RECORD SEPARATOR
        ␟  "\u241F" 0xE2 0x90 0x9F SYMBOL FOR UNIT SEPARATOR
  
-  ␉ ␋ HORZONTAL and VERTICAL TABULATION
+    ␉ ␋ HORZONTAL and VERTICAL TABULATION
  
     ⇀↽ ⇀↽ ⇀↽ ⇀↽ "\u001F" - "\u001C", 0x1F - 0x1C, INFORMATION SEPARATOR ONE/FOUR
  
- Buttons: ⌘ Command, &#x2318; – &#8984; ⌥ Option, &#x2325; – &#8997; ⇧ Shift,
+   Buttons: ⌘ Command, &#x2318; – &#8984; ⌥ Option, &#x2325; – &#8997; ⇧ Shift,
     &#x21E7; – &#8679; ⎋ ESC &#x238B; – &#9099; ⇪ Capslock &#x21ea; – &#8682;
     ⏎  Return &#x23ce; – &#9166; ⌫ Delete/Backspace, &#x232b; – &#9003;
     ⇥ Tab Arrow
  
- Spaces: ⇀ ↽ (en space), ⇀  ↽ (em space), ⇀ ↽ (Three-per-em space), ⇀ ↽ (Four
- per em-space), ⇀ ↽ (Six-per-em), ⇀ ↽ (Figure space), ⇀ ↽ (Punctuation space),
- ⇀ ↽ (Thin space), ⇀ ↽ (Hair space), ⇀ ​↽ (Zero width space), ⇀ ↽ (Narrow no-
- break space), ⇀ ↽ (Medium mathematical space), ⇀　↽ (Ideographic space), ⇀〿↽
- (Ideographic half-fill space). ␣ (Knuths' Constant.)
+   Spaces: ⇀ ↽ (en space), ⇀  ↽ (em space), ⇀ ↽ (Three-per-em space), ⇀ ↽ (Four
+   per em-space), ⇀ ↽ (Six-per-em), ⇀ ↽ (Figure space), ⇀ ↽ (Punctuation space),
+   ⇀ ↽ (Thin space), ⇀ ↽ (Hair space), ⇀ ​↽ (Zero width space), ⇀ ↽ (Narrow no-
+   break space), ⇀ ↽ (Medium mathematical space), ⇀　↽ (Ideographic space), ⇀〿↽
+   (Ideographic half-fill space). ␣ (Knuths' Constant.)
  
  *␣///}✂️ >> --<myShoebox>{Utf-8 Control Codes} */
 
 #define INLINED __attribute__((always_inline))
 #define MACRO inline INLINED
 // Macros for .cpp and .cxx files, e.g exclude symbols from an export table.
-// INNER_STRUCT affects all methods and static data members in the decorated.
+// INNER_STRUCT actually affects all methods/static data members in decorated.
 #define INNER_STRUCT struct __attribute__((internal_linkage))
 #define INNER_DATA static __attribute__((internal_linkage))
 #define INNER_FUNCTION static __attribute__((internal_linkage))
@@ -420,7 +420,7 @@ struct MemoryRegion {
     
 #pragma mark Little and Big Endians
     
-    /**  Toggle between network and native order. */
+    /**  TODO: Measure energy consumption while 𝑝𝑢𝑚𝑝𝑖𝑛' 𝑛𝑒𝑡𝑤𝑜𝑟𝑘/𝑛𝑎𝑡𝑖𝑣𝑒. */
     
     INLINED void toggleNetworkAndNative(void (^completion)(__builtin_int_t
       bytes)) const; // REQ: O(1)
