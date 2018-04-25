@@ -78,9 +78,10 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
         ⸻ Three-em Dash, 〰 Wavy Dash, - Hyphen Minus.
  
    Arrows: ⇽ ⇾ ⟲⟳ ↗︎↘︎↙︎↖︎ ⸔⸕ ⤡⤢ ⤺⤻ ↰↱↲↳ ↴ ↩︎ ↵  ⮐ ↹ ←↑→↓
-    ↼ (Leftward harpoon with barb upwards) ↽↾↿⇀⇁⇂⇃⇄⇅⇆⇇⇈⇉⇊⇋⇌⇍⇏⇐⇑⇒⇓⇚⇛⇜⇝⇤⇥⇦⇧⇨
-    ⇩⇪⇵⇶ ⎔ ➔➙➛➜➝➞➟➠⟰⟤⟥ ⤶ ⤷  ↔︎
-   📲📩📈📉🔃➡︎⬅︎⬆︎⬇︎↩︎⤴︎⤵︎⤴⤵ (牮筏) ⬷ ⤐ (Leftwards two-headed triple dash arrow)
+     ↼ (Leftward harpoon with barb upwards) ↽↾↿⇀⇁⇂⇃⇄⇅⇆⇇⇈⇉⇊⇋⇌⇍⇏⇐⇑⇒⇓⇚⇛⇜⇝⇤⇥⇦⇧
+     ⇨⇩⇪⇵⇶ ⎔ ➔➙➛➜➝➞➟➠⟰⟤⟥ ⤶ ⤷  ↔︎
+     📲📩📈📉🔃➡︎⬅︎⬆︎⬇︎↩︎⤴︎⤵︎⤴⤵ (牮筏)
+     ⬷ ⤐ (Leftwards two-headed triple dash arrow)
  
    Extensions: ⁌⁍ ⊸ ⫰ ⫱ ⿱⿳⿶  ⃦ a⃮ b⃯ a͍ (Combining left and right arrow below),
      a̫b̫c̫ ⬷ 'Combining inverted double arch below' a⃨b⃨c⃨ a⃩ a⃪
@@ -96,29 +97,29 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
        ␞  "\u241E" 0xE2 0x90 0x9E SYMBOL FOR RECORD SEPARATOR
        ␟  "\u241F" 0xE2 0x90 0x9F SYMBOL FOR UNIT SEPARATOR
  
-    ␉ ␋ HORZONTAL and VERTICAL TABULATION
- 
-    ⇀↽ ⇀↽ ⇀↽ ⇀↽ "\u001F" - "\u001C", 0x1F - 0x1C, INFORMATION SEPARATOR ONE/FOUR
+    ␉ ␋ HORZONTAL and VERTICAL TABULATION ⇀↽ ⇀↽ ⇀↽ ⇀↽ "\u001F" - "\u001C",
+    0x1F - 0x1C, INFORMATION SEPARATOR ONE/FOUR
  
    Buttons: ⌘ Command, &#x2318; – &#8984; ⌥ Option, &#x2325; – &#8997; ⇧ Shift,
-    &#x21E7; – &#8679; ⎋ ESC &#x238B; – &#9099; ⇪ Capslock &#x21ea; – &#8682;
-    ⏎  Return &#x23ce; – &#9166; ⌫ Delete/Backspace, &#x232b; – &#9003;
-    ⇥ Tab Arrow
+     &#x21E7; – &#8679; ⎋ ESC &#x238B; – &#9099; ⇪ Capslock &#x21ea; – &#8682;
+     ⏎  Return &#x23ce; – &#9166; ⌫ Delete/Backspace, &#x232b; – &#9003;
+     ⇥ Tab Arrow
  
-   Spaces: ⇀ ↽ (en space), ⇀  ↽ (em space), ⇀ ↽ (Three-per-em space), ⇀ ↽ (Four
-     per em-space), ⇀ ↽ (Six-per-em), ⇀ ↽ (Figure space), ⇀ ↽ (Punctuation space),
-     ⇀ ↽ (Thin space), ⇀ ↽ (Hair space), ⇀ ​↽ (Zero width space), ⇀ ↽ (Narrow no-
-     break space), ⇀ ↽ (Medium mathematical space), ⇀　↽ (Ideographic space), ⇀〿↽
+   Spaces: ⇀ ↽ (en space), ⇀  ↽ (em space), ⇀ ↽ (Three-per-em space),
+     ⇀ ↽ (Four per em-space), ⇀ ↽ (Six-per-em), ⇀ ↽ (Figure space),
+     ⇀ ↽ (Punctuation space), ⇀ ↽ (Thin space), ⇀ ↽ (Hair space),
+     ⇀ ​↽ (Zero width space), ⇀ ↽ (Narrow no-break space),
+     ⇀ ↽ (Medium mathematical space), ⇀　↽ (Ideographic space), ⇀〿↽
      (Ideographic half-fill space). ␣ (Knuths' Constant.)
  
- *␣///}✂️ >> --<myShoebox>{Utf-8 Control Codes} */
+ *␣///}✂️ >> --<myShoebox>{Utf-8 Symbols} */
 
 #pragma mark - Reverse Engineering and Export Tables (prompt> nm -help)
 
 #define INLINED __attribute__((always_inline))
 #define MACRO inline INLINED
 // Macros for .cpp and .cxx files, e.g exclude symbols from an export table.
-// INNER_STRUCT actually affects all methods/static data members in decorated?
+// INNER_STRUCT actually affects all methods/static data members in decorated.
 #define INNER_STRUCT struct __attribute__((internal_linkage))
 #define INNER_DATA static __attribute__((internal_linkage))
 #define INNER_FUNCTION static __attribute__((internal_linkage))
@@ -380,7 +381,7 @@ extern "C" { void * malloc(size_t); void free(void *); int printf(const char
 extern "C" { extern const char *tab; extern const char *eol; extern const char
   *sep; }
 
-#pragma mark - Occasionally Used main() Exitcodes
+#pragma mark - Occasionally Used `main` Exitcodes
 
  #define EXIT_OK                         0
  #define EXIT_ERROR_IN_COMMAND_LINE      1
@@ -406,6 +407,8 @@ struct MemoryRegion {
     
     int exclude(metaaddress start, __builtin_int_t bytes);
     
+    int frame(MemoryRegion virtue, metaaddress loc);
+    
     SemanticPointer<void *> pointer(__builtin_int_t byte);
     
     __builtin_int_t bytes();
@@ -430,7 +433,7 @@ struct MemoryRegion {
     
 #pragma mark Iterator
     
-    int forall(void (^block)(SemanticPointer<uint8_t *> p, bool first,
+    int forall(void (^block)(SemanticPointer<uint8_t *> isolative, bool first,
       bool last, __builtin_int_t index, bool& stop));
     
 #pragma mark Conveniences
@@ -459,10 +462,10 @@ struct MemoryRegion {
 😐;
 
 struct MemoryRegionDelegate {
-    virtual void first(MemoryRegion * region, SemanticPointer<void *> current) = 0;
+    virtual void first(MemoryRegion * region, SemanticPointer<void *> curr) = 0;
     virtual void next(MemoryRegion * region, SemanticPointer<void *> current, SemanticPointer<void *> later) = 0;
     virtual void prev(MemoryRegion * region, SemanticPointer<void *> current, SemanticPointer<void *> later) = 0;
-    virtual void last(MemoryRegion * region, SemanticPointer<void *> current) = 0;
+    virtual void last(MemoryRegion * region, SemanticPointer<void *> curr) = 0;
 };
 
 __builtin_int_t SystemInfoPageSize();
