@@ -282,8 +282,8 @@ extern jmp_buf2 _envBuffer;
     longjmp(_envBuffer, (__builtin_uint_t)str,          \
       ^(Exception exception) { closure(exception); });
 #define BLURTS /* Mandatory */
-#define NEVERBLURTS /* Optional. May or may not insert try catch and setjmp/longjmp guards. May very well be syntesized. */
-#define FALLIBLE /* Mandatory when constructor blurts */
+#define NEVERBLURTS /* Fortunately optional. */
+#define FALLIBLE /* Unfortunately not mandatory while constructor blurts. */
 #define TRY { jmp_buf2 _envBuffer; if (!setjmp(_envBuffer)) {
 #define CATCH } else {
 #define END_TRY } }
@@ -336,6 +336,7 @@ extern jmp_buf2 _envBuffer;
 #define OPT_Si_FOCAL
 #define SEQUENTIAL
 #define SWIZZLE
+#define ENCLAVED
 #define DONT_REQUIRE_SIGNBIT
 #define TRANSMOGRIFYING
 
@@ -397,7 +398,7 @@ struct MemoryRegion {
     
     int incorporate(void *virtue, __builtin_int_t bytes, metaaddress loc);
     
-    int inject(__builtin_int_t index, MemoryRegion sub, void *(^ allocate)
+    int inject(__builtin_int_t index, MemoryRegion sub, void *(^allocate)
       (__builtin_int_t bytes) = ^(__builtin_int_t b) { return malloc(b); } );
     
     int exclude(metaaddress start, __builtin_int_t bytes);
