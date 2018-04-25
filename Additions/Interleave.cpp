@@ -4,7 +4,9 @@
 //
 
 #include <Additions/Interleave.h>
+#ifdef __x86_64__
 #include <immintrin.h>
+#endif
 
 #pragma mark BMI2 SW Equiv. for PEXT and PDEP
 
