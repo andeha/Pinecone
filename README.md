@@ -20,7 +20,7 @@ With additional features such as:
 - Well-defined helper functions such as `IsPowerOfTwo`, `Frame`, `HowMany`, `Roman` and `Base`
 - Integer random numbers and uniform/normally distributed random floating-points
 - Formatting tables (`PresentTable`) and trees (`TreePresenter`)
-- Graphs (as in graph theory)
+- Graphs (as in *graph theory*)
 - Time series, percentiles and histograms 
 - Linear programs, FFT and computational geometry
 - Bezier paths and rasterization
@@ -55,7 +55,7 @@ To print to the console (on macOS) or on UART5 (on PIC32MX/MZ):
     Termlog << eol << "Hello" << tab << "world" << sep;
     printf(" - Mr. Pinecone");
 
-To create a amorphous memory area, write:
+To create an amorphous memory area, write:
 
     Optional<MemoryRegion> file = MemoryRegion::abduct(1024*1024);
     if (MemoryRegion *region = file.query()) {
@@ -87,7 +87,7 @@ To create a vector, write:
     Vector<int> v = { 3, 2, 1 };
     int second = v[1];
     
-For more examples, see the unit tests available in the `UnitTests` directory.
+More examples are available in the `UnitTests` directory.
 
 ## References
 
