@@ -15,7 +15,7 @@
     
     ⏱😐🏁
     
-    Macros when measuring performance.  Note the unexisting @c MEASURE macro
+    Macros measuring performance.  Note the nonexisting @c POOL_MEASURE macro
     closing bracket.
     
     @code
