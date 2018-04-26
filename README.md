@@ -18,7 +18,7 @@ With additional features such as:
 
 - Chronologies, calendars and instants
 - Well-defined helper functions such as `Frame`,  `IsPowerOfTwo`, `Roman` and `HowMany`
-- Integer random numbers and uniform- or normally distributed random floating-points
+- Random integers, series of random integers and uniform- or normally distributed random floating-points
 - Formatting tables (`PresentTable`) and trees (`TreePresenter`)
 - Graphs (as in *graph theory*)
 - Time series, percentiles and histograms 
