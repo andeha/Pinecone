@@ -428,8 +428,8 @@ struct MemoryRegion {
     
     /**  TODO: Measure energy consumption while 𝑝𝑢𝑚𝑝𝑖𝑛' 𝑛𝑒𝑡𝑤𝑜𝑟𝑘/𝑛𝑎𝑡𝑖𝑣𝑒. */
     
-    INLINED void toggleNetworkAndNative(void (^completion)(__builtin_int_t
-      bytes)) const; // REQ: O(1)
+    INLINED void toggleNetworkAndNative(void (^ping)(bool &stop), void
+      (^completion)(__builtin_int_t bytes)) const; // REQ: O(1)
     
 #pragma mark Iterator
     
