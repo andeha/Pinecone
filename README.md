@@ -55,7 +55,7 @@ To print to the console (on macOS) or on UART5 (on PIC32MX/MZ):
     Termlog << tab << "Hello world" << eol;
     printf("Bon-bon");
 
-To create an amorphous memory area, write:
+To create amorphous memory areas, write:
 
     Optional<MemoryRegion> file = MemoryRegion::abduct(1024*1024);
     if (MemoryRegion *region = file.query()) {
@@ -72,7 +72,7 @@ To open a device-independent Utf-8 text file, write:
         printf("%s, size: %d, %x, %b", p, region->bytes(), region->bytes(), region->bytes());
     }
 
-To open a native Unicode text file, write:
+To open a Unicode text file assuming same endianness as used in the processor you are targeting, write:
 
     Optional<MemoryRegion> file = MemoryRegion::reflect("/tmp/unicode_text.txt");
     if (MemoryRegion *region = file.query()) {
@@ -85,7 +85,7 @@ Explore streams of Unicode symbols with
     String s = StringLiteral("😐 🕶👍");
     
     UnicodeBeam beam;
-    UnicodeBeamInitialize(s, beam, false);
+    UnicodeBeamInitialize(s, &beam, false);
     
     again:
     
