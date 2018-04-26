@@ -407,7 +407,7 @@ struct MemoryRegion {
     
     int exclude(metaaddress start, __builtin_int_t bytes);
     
-    int incorporate(MemoryRegion virtue, metaaddress loc);
+    int takeover(MemoryRegion virtue, metaaddress loc);
     
     SemanticPointer<void *> pointer(__builtin_int_t byte);
     
