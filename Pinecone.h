@@ -64,7 +64,7 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
  
       ∞              ∞
       ⌠ 🔍😐         \̅
-      ⎮ 𝘦^-𝘹 𝘥𝘹 ≅ √𝘹 + › ⁣⅟k² ≅ @w Sum[, ... ∈ R                             (0)
+      ⎮ 𝘦^-𝘹 𝘥𝘹 ≅ √𝘹 + › ⁣⅟k² ≅ @w Sum[, ... ∈ ℝ (DOUBLE-STRUCK CAPITAL R)    (0)
       ⌡              /͟
      -∞             k=1
  
@@ -434,7 +434,7 @@ struct MemoryRegion {
 #pragma mark Iterator
     
     int forall(void (^block)(SemanticPointer<uint8_t *> isolative, bool first,
-      bool last, __builtin_int_t index, bool& stop));
+      bool last, __builtin_int_t index, __builtin_int_t * step, bool& stop));
     
 #pragma mark Conveniences
     
