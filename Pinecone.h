@@ -295,6 +295,8 @@ extern jmp_buf2 _envBuffer;
 
 #pragma mark - Macros Available when 'Git!'
 
+// BuildPhasesRunscript: export sha1git=`git log -1 '--pretty=format:%h'`
+// BuildSettingsOtherC(++)Flags -DSHA1GIT=$(sha1git)
 #define PROGRESS_QUOTE_MACRO(x) STRINGIFY(x)
 #define PROGRESS_VERSION PROGRESS_QUOTE_MACRO(SHORT_VERSION)
 #define PROGRESS_VERSION_SHA1 PROGRESS_QUOTE_MACRO(SHA1GIT)
@@ -352,6 +354,29 @@ extern jmp_buf2 _envBuffer;
  #define va_prologue(symbol)            \
    __builtin_va_list arg;               \
    __builtin_va_start(arg, symbol);
+
+#ifdef __is_symbolic //  ☜😐: 🛎 ∨ ✂️
+ #define ∧ &&
+ #define ∨ ||
+ #define ￢ !
+ #define ↹ tab
+ #define ¶ sep
+ #define ↩︎ eol
+ #define ■ 1
+ #define □ 0
+ #define ⬚ TriboolUnknown
+ #define 𝛺(ident) bool ident = false;
+ #define 𝛺☜(ident, ret) OMEGASET(ident, ret)
+ #define ⊕ !IsEqual(a, b) // ≈
+ #define ⟶(a, b)  (¬(a) ∨ (b))
+ #define ⟷(a, b)  (⟶((a), (b)) ∧ ⟶((b), (a)))
+ #define ⟵(a, b)  ((a) ∨ ¬(b))
+ #define ≤ <= // ☜😐: //
+ #define ≥ >=
+ #define ⎨ NOTBLURTING_BEGIN {
+ #define ⎬ } NOTBLURTING_END
+ #define ∅ NULL
+#endif
 
 #pragma mark - Runtime
 
