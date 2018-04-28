@@ -373,7 +373,7 @@ extern jmp_buf2 _envBuffer;
  #define ⟵(a, b)  ((a) ∨ ¬(b))
  #define ≤ <= // ☜😐: //
  #define ≥ >=
- #define ⎨ NOTBLURTING_BEGIN {
+ #define ⎨ NOTBLURTING_BEGIN { // i.e 𝐵old-braces
  #define ⎬ } NOTBLURTING_END
  #define ∅ NULL
 #endif
