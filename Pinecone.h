@@ -355,7 +355,7 @@ extern jmp_buf2 _envBuffer;
    __builtin_va_list arg;               \
    __builtin_va_start(arg, symbol);
 
-#ifdef __is_symbolic //  ☜😐: 🛎 ∨ ✂️
+#ifdef __knows_spelling //  ☜😐: 🛎 ∨ ✂️
  #define ∧ &&
  #define ∨ ||
  #define ￢ !
