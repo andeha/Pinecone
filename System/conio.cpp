@@ -8,12 +8,11 @@
 #ifdef __x86_64__
 
 #include <stdio.h>
-
 uint8_t getch() { return (uint8_t)getc(stdin); }
 void putch(uint8_t data) { putchar(data); }
 void initUART() {}
 
-#elif __mips__
+#elif defined __mips__
 
 //#include<PIC32MXCPU.h>
 #include<PIC32MZCPU.h>

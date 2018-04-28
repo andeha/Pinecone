@@ -137,7 +137,7 @@ typedef long long           int32_t;
 typedef uint32_t            __builtin_uint_t;
 typedef int32_t             __builtin_int_t;
 #define TriboolUnknown 0xFFFFFFFF
-#elif __x86_64__
+#elif defined __x86_64__
 typedef unsigned long long  uint64_t;
 typedef long long           int64_t;
 typedef unsigned int        uint32_t;
@@ -204,7 +204,7 @@ template <typename T> struct Optional { union Option { T inner;
 
 #ifdef  __mips__
 typedef unsigned int size_t;
-#elif __x86_64__
+#elif defined __x86_64__
 typedef unsigned long size_t;
 #endif
 
@@ -254,7 +254,7 @@ MACRO void 🔧Toggle(__builtin_uint_t var, __builtin_uint_t mask) {
 #ifdef  __mips__
 typedef uint32_t mips32_context[32]; // EPC, Status, r31-30, r28, r25-r1, hi, lo
 typedef mips32_context jmp_buf2;  // ☜😐: ?
-#elif __x86_64__
+#elif defined __x86_64__
 // rflags, rip, rbp, rsp, rbx, r12, r13, r14, r15... these are 8 bytes each
 // mxcsr, fp control word, sigmask... these are 4 bytes each add 16 ints for
 // future expansion needs.
@@ -357,7 +357,7 @@ extern jmp_buf2 _envBuffer;
 
  #ifdef  __mips__
     #define Halt for(;;);
- #elif __x86_64__
+ #elif defined __x86_64__
     #define Halt asm("hlt");
  #endif
 
@@ -421,7 +421,7 @@ struct MemoryRegion {
     
     Tuple<MemoryRegion, MemoryRegion> attach(metaaddress loc) const;
     
-    Tuple<MemoryRegion, MemoryRegion> detach(metaaddress loc, void *(^allocate)
+    Tuple<MemoryRegion, MemoryRegion> branch(metaaddress loc, void *(^allocate)
       (__builtin_int_t bytes)) const;
     
 #pragma mark Little and Big Endians
@@ -434,7 +434,7 @@ struct MemoryRegion {
 #pragma mark Iterator
     
     int forall(void (^block)(SemanticPointer<uint8_t *> isolative, bool first,
-      bool last, __builtin_int_t index, __builtin_int_t * step, bool& stop));
+      bool last, __builtin_int_t index, signed short * step, bool& stop));
     
 #pragma mark Conveniences
     
@@ -445,13 +445,13 @@ struct MemoryRegion {
     
     static Optional<MemoryRegion> reflect(const char * utf8Filepath,
       __builtin_int_t pagesOffset = 0, __builtin_int_t pagesLength = -1,
-      MemoryRegionDelegate * delegate = NULL, bool allowWrites = false,
+      MemoryRegionDelegate *delegate = NULL, bool allowWrites = false,
       void *(^allocate)(__builtin_int_t bytes) = ^(__builtin_int_t bytes) {
         return malloc(bytes); });
     
     Optional<MemoryRegion> clone(void *(^allocate)(__builtin_int_t bytes) = ^( // TODO: Move to base?
       __builtin_int_t bytes) { return malloc(bytes); } ) {
-        Tuple<MemoryRegion, MemoryRegion> regions = detach(0, allocate);
+        Tuple<MemoryRegion, MemoryRegion> regions = branch(0, allocate);
         if (bytes() == 0 || get<1>(regions).bytes() != 0) { return Optional<
           MemoryRegion>(get<1>(regions)); } return Optional<MemoryRegion>::no();
     };

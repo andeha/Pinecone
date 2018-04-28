@@ -48,7 +48,7 @@ vfprintf_eightbit(
                 Base(x, 16,
 #ifdef __x86_64__
                      16
-#elif __mips__
+#elif defined __mips__
                      8
 #endif
                 , ^(char s) { streamout_char(stream, s); printedBytesExcept0++; });
@@ -58,7 +58,7 @@ vfprintf_eightbit(
                 Base(b, 2,
 #ifdef __x86_64__
                      64
-#elif __mips__
+#elif defined __mips__
                      32
 #endif
                 , ^(char s) { streamout_char(stream, s); printedBytesExcept0++; });
@@ -71,6 +71,8 @@ vfprintf_eightbit(
             case 'S': {
                 const char32_t *s = __builtin_va_arg(arg, const char32_t *);
                 printedBytesExcept0 += streamout_unicodes(stream, s, -1);
+                // MemoryRegion *region = __builtin_va_arg(arg, MemoryRegion *);
+                // printedSymbolsExcept0 += streamout_unicodes(stream, region, -1);
                 break; }
 #endif
         } }
@@ -107,16 +109,21 @@ INNER_FUNCTION
 int // bytes, symbols
 streamout_unicodes(
     OutputStream *stream,
-    const char32_t *s,
+    MemoryRegion *region,
     __builtin_int_t count
 )
 {
-    int symbolsExcept0 = 0;
-    while (char32_t u = *s++) { streamout_unicode(stream, u); symbolsExcept0++; count--; }
+    __block int symbolsExcept0 = 0; __block __builtin_int_t c = count;
+    region->forall(^(SemanticPointer<uint8_t *> isolative, bool first, bool
+      last, __builtin_int_t index, signed short * step, bool& stop) {
+        if (first) { *step = 4; } // We know that the region is sized modulo page size.
+        char32_t *pu = (char32_t *)isolative.pointer;
+        streamout_unicode(stream, *pu); symbolsExcept0++; c--;
+    });
     return symbolsExcept0;
 }
 
-int // Tuple<int, int, int> i.e user-percieved characters, unicodes, Utf-8.
+int // Tuple<int, int, int> i.e user-percieved characters, unicodes and utf-8
 vfprintf_unicode(
     OutputStream *stream,
     const char32_t *oneblockFormat,
@@ -136,7 +143,7 @@ vfprintf_unicode(
                 Base(x, 16,
 #ifdef __x86_64__
                 16
-#elif __mips__
+#elif defined __mips__
                 8
 #endif
                 , ^(char s) { streamout_char(stream, s); printedSymbolsExcept0++; });
@@ -146,7 +153,7 @@ vfprintf_unicode(
                 Base(b, 2,
 #ifdef __x86_64__
                 64
-#elif __mips__
+#elif defined __mips__
                 32
 #endif
                 , ^(char s) { streamout_char(stream, s); printedSymbolsExcept0++; });
@@ -156,8 +163,8 @@ vfprintf_unicode(
                 printedSymbolsExcept0 += streamout_eightbit(stream, s);
                 break; }
             case 'S': {
-                const char32_t *s = __builtin_va_arg(arg, const char32_t *);
-                printedSymbolsExcept0 += streamout_unicodes(stream, s, -1);
+                MemoryRegion *region = __builtin_va_arg(arg, MemoryRegion *);
+                printedSymbolsExcept0 += streamout_unicodes(stream, region, -1);
                 break; }
         } }
     }
@@ -171,8 +178,8 @@ vfprintf_utf8(
     __builtin_va_list arg
 )
 {
-    String s = StringLiteral(utf8Format);
-    int result = vfprintf_unicode(stream, (const char32_t *)(*s)->pointer(0).pointer, arg);
+    String s = StringLiteral(utf8Format); // Requires that INLINED static String Literal(const char *utf8, ...) creates a one-block Unicode string, which the method does.
+    int result = vfprintf_unicode(stream, (const char32_t *)(*s)->pointer(0).pointer, arg); // ☜😐 TODO: Consider adding a user-defined Unicode for next block address.
     return result;
 }
 
