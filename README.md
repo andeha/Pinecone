@@ -4,7 +4,7 @@
 Welcome to *Pinecone*, the library operating system for your next internet of things project, embedded experiment or robotics prototype. The library comprises of a run-time with:
 
 - Dynamically resizable memory regions
-- Unicode-, utf-8 and decorated strings (and terminal I/O for decorated strings)
+- Unicode-, Utf-8 and decorated strings (and terminal I/O for decorated strings)
 - Memory-mapped files (`abduct` and `reflect`)
 - The *pimpl* idiom, `Optional` and `Tuple` classes
 - Slim `Vector` and `Map` container templates
@@ -27,9 +27,7 @@ With additional features such as:
 
 ## Examples
 
-To get a feeling for how to use the API's, please scan through the following examples. 
-
-To create Unicode® strings:
+To understand how to use the API, please scan through the following examples:
 
     String space = StringLiteral(" ");
     String s = StringLiteral("%s%S%s", "prefix", *space, "suffix");
