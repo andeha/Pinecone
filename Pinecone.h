@@ -345,6 +345,7 @@ extern jmp_buf2 _envBuffer;
 #define DONT_REQUIRE_SIGNBIT
 #define TRANSMOGRIFYING
 #define µA(measured,envisioned)
+#define MAY_CONTAIN_TRACES_OF_SOFT_REALTIME
 
 #pragma mark - Pleasure Cycles
 
@@ -459,7 +460,7 @@ struct MemoryRegion {
 #pragma mark Iterator
     
     int forall(void (^block)(SemanticPointer<uint8_t *> isolative, bool first,
-      bool last, __builtin_int_t index, signed short * step, bool& stop));
+      bool last, __builtin_int_t index, signed short * stepping, bool& stop));
     
 #pragma mark Conveniences
     
@@ -474,7 +475,7 @@ struct MemoryRegion {
       void *(^allocate)(__builtin_int_t bytes) = ^(__builtin_int_t bytes) {
         return malloc(bytes); });
     
-    Optional<MemoryRegion> clone(void *(^allocate)(__builtin_int_t bytes) = ^( // TODO: Move to base?
+    Optional<MemoryRegion> clone(void *(^allocate)(__builtin_int_t bytes) = ^( // TODO: Move to impl.
       __builtin_int_t bytes) { return malloc(bytes); } ) {
         Tuple<MemoryRegion, MemoryRegion> regions = branch(0, allocate);
         if (bytes() == 0 || get<1>(regions).bytes() != 0) { return Optional<
