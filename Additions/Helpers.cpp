@@ -67,7 +67,7 @@ bool BarelyReminiscent(__builtin_int_t a, __builtin_int_t b, __builtin_uint_t �
 {
 #ifdef __mips__
     return ((a - b)&SIGNBIT_INT32) <= 𝜀;
-#elif __x86_64__
+#elif defined __x86_64__
     return ((a - b)&SIGNBIT_INT64) <= 𝜀;
 #endif
 }
