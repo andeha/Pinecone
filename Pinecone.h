@@ -121,6 +121,7 @@ typedef double(^Recursive)(double x, double n, bool(^)(double));
 // Macros for .cpp and .cxx files, e.g exclude symbols from an export table.
 // INNER_STRUCT actually affects all methods/static data members in decorated.
 #define INNER_STRUCT struct __attribute__((internal_linkage))
+#define INNER_UNION union __attribute__((internal_linkage))
 #define INNER_DATA static __attribute__((internal_linkage))
 #define INNER_FUNCTION static __attribute__((internal_linkage))
 #define STRINGIFY(x) #x
@@ -282,12 +283,12 @@ extern "C" { int setjmp2(jmp_buf2 env); void longjmp2(jmp_buf2 env,
 extern jmp_buf2 _envBuffer;
 #define BLURT(str) longjmp2(_envBuffer, (__builtin_uint_t)str);
 #define MIRROR(str, closure)                            \
-    longjmp(_envBuffer, (__builtin_uint_t)str,          \
+    longjmp2(_envBuffer, (__builtin_uint_t)str,         \
       ^(Exception exception) { closure(exception); });
 #define BLURTS /* Mandatory */
 #define NEVERBLURTS /* Fortunately optional. */
 #define FALLIBLE /* Unfortunately not mandatory while constructor blurts. */
-#define TRY { jmp_buf2 _envBuffer; if (!setjmp(_envBuffer)) {
+#define TRY { jmp_buf2 _envBuffer; if (!setjmp2(_envBuffer)) {
 #define CATCH } else {
 #define END_TRY } }
 #define NOTBLURTING_BEGIN { TRY

@@ -131,11 +131,11 @@ namespace Naturals {
 #pragma mark - Endianess, 128/256-bits Computers, IEEE 754-2008 and 𝒕𝒉𝒆 𝒉𝒂𝑙𝑓
  
  typedef union {
-    double value; // 2^–1022  2^1023 or 2.23 × 10^–308 to 1.79 × 10^308
-    struct { uint32_t lsl; int32_t msl; } little_endian;
-    struct { int32_t msl; uint32_t lsl; } big_endian;
-    struct { uint32_t lsl; uint32_t msl; } unsigned_little_endian;
-    struct { uint32_t msl; uint32_t lsl; } unsigned_big_endian;
+    double base2; // 2^–1022  2^1023 or 2.23 × 10^–308 to 1.79 × 10^308
+    struct { uint32_t lst; int32_t mst; } little_endian;
+    struct { int32_t mst; uint32_t lst; } big_endian;
+    struct { uint32_t lst; uint32_t mst; } unsigned_little_endian;
+    struct { uint32_t mst; uint32_t lst; } unsigned_big_endian;
     struct {
         unsigned mantissal : 32;
         unsigned mantissah : 20;
@@ -143,12 +143,12 @@ namespace Naturals {
         unsigned sign      :  1;
     } ieee754;
 #ifdef __x86_64__
-    uint64_t quad;
+    uint64_t octa;
 #endif
- } quad;
+ } octa;
  
 #ifdef __mips__
-    typedef quad uint64_t;
+    typedef octa uint64_t;
 #endif
  
 #ifdef __x86_64__
@@ -158,26 +158,26 @@ namespace Naturals {
  
  typedef union {
 #ifdef __x86_64__
-    __m128 whole;
-    __m128i integer;
-    __m128d doubleFloat;
+    __m128 sexdeca;
+    __m128i twoOcta;
+    __m128d twoDoubles;
 #endif
-    struct { int64_t lsq; uint64_t msq; } little_endian;
-    struct { int64_t msq; uint64_t lsq; } big_endian;
-    struct { uint64_t lsq; uint64_t msq; } unsigned_little_endian;
-    struct { uint64_t msq; uint64_t lsq; } unsigned_big_endian;
- } octa;
- 
- typedef union {
-#ifdef __x86_64__
-    __m256 doublewhole;
-#endif
-    struct { octa lso; octa mso; } little_endian;
-    struct { octa mso; octa lso; } big_endian;
+    struct { int64_t lso; uint64_t mso; } little_endian;
+    struct { int64_t mso; uint64_t lso; } big_endian;
+    struct { uint64_t lso; uint64_t mso; } unsigned_little_endian;
+    struct { uint64_t mso; uint64_t lso; } unsigned_big_endian;
  } sexdeca;
  
  typedef union {
-    float value; // 2^–126 to 2^127 or 1.18 × 10^–38 to 3.40 × 10^38
+#ifdef __x86_64__
+    __m256 fourOcta;
+#endif
+    struct { sexdeca lss; sexdeca mss; } little_endian;
+    struct { sexdeca mss; sexdeca lss; } big_endian;
+ } hentriaconta;
+ 
+ typedef union {
+    float base2; // 2^–126 to 2^127 or 1.18 × 10^–38 to 3.40 × 10^38
     struct { int16_t lsh; uint16_t msh; } little_endian;
     struct { int16_t msh; uint16_t lsh; } big_endian;
     struct {
@@ -185,11 +185,11 @@ namespace Naturals {
         unsigned exponent :  8;
         unsigned sign     :  1;
     } ieee754;
-    uint32_t longword;
- } longword;
+    uint32_t tetra;
+ } tetra;
  
  typedef union { // 2^–14 to 2^15 or 3.1 × 10^–5 to 6.50 × 10^4
-    // binary16 IEEE 754-2008's
+    // binary16 base2
     struct { int8_t lsh; uint8_t msh; } little_endian;
     struct { uint8_t msh; int8_t lsh; } big_endian;
     struct {
@@ -197,7 +197,7 @@ namespace Naturals {
         unsigned exponent :  5;
         unsigned sign     :  1;
     } ieee754;
-    uint16_t shortword;
+    uint16_t half;
  } half;
  
 #pragma mark - Math
@@ -214,23 +214,23 @@ namespace Naturals {
  #define IEEE754BASE2_64BIT_NINF   0xfff0000000000000L
  #define IEEE754BASE2_32BIT_QNAN   0x7FC00000
  
- MACRO double abs64s(float x) { longword w; w.value = x; w.ieee754.sign = 0; return w.value; }
- MACRO double abs64d(double x) { quad q; q.value = x; q.ieee754.sign = 0; return q.value; }
+ MACRO float abs64s(float x) { tetra t; t.base2 = x; t.ieee754.sign = 0; return t.base2; }
+ MACRO double abs64d(double x) { octa o; o.base2 = x; o.ieee754.sign = 0; return o.base2; }
  
  template <typename T> MACRO T abs(T x) { return x < 0 ? -x : x; }
  
  MACRO bool isinf(double x) {
-    quad y; y.value = x;
-    return y.ieee754.exponent == 0x7ff || y.ieee754.exponent == 0xfff; }
+    octa o; o.base2 = x;
+    return o.ieee754.exponent == 0x7ff || o.ieee754.exponent == 0xfff; }
  
  MACRO bool isnan(double x) {
-    quad y; y.value = x;
-    return (y.ieee754.mantissah != 0 || y.ieee754.mantissal != 0) &&
-    y.ieee754.exponent == 0x7ff; }
+    octa o; o.base2 = x;
+    return (o.ieee754.mantissah != 0 || o.ieee754.mantissal != 0) &&
+    o.ieee754.exponent == 0x7ff; }
 
  MACRO bool isnegone(double x) {
-    quad y; y.value = x;
-    return y.little_endian.lsl == -1 && y.little_endian.msl == -1; }
+    octa o; o.base2 = x;
+    return o.little_endian.lst == -1 && o.little_endian.mst == -1; }
  
  /**
  
@@ -294,8 +294,8 @@ struct AlgebraicCategory {
     virtual T sqrt3div2() const = 0;
     virtual T onedivsqrt2() const = 0;
     virtual T epsilon() const = 0;
-    //virtual T NaN() const = 0;
-    //virtual T quietNaN() const = 0;
+    // virtual T NaN() const = 0;
+    // virtual T quietNaN() const = 0;
     virtual T pow(T x, T y, T env) const = 0;
     virtual T sin(T x) const = 0;
     virtual T cos(T x) const = 0;
@@ -364,7 +364,7 @@ struct AlgebraicCategory {
  /* ONETIMEPAD */ typedef struct Fossilate /* public : base */ {
     /* DISJUNCT */ union Value {
         // ...Interesting. FINAL below often                        ☜😐🔅¹
-        Tuple<__builtin_uint_t, char32_t *> machineString; // ⬷ Not stored in SI™
+        Tuple<__builtin_int_t, char32_t *> machineString; // ⬷ Not stored in SI™
         char *eightbitCString;
         __builtin_uint_t bitmap;
         double real;
@@ -558,16 +558,224 @@ private:
 #define StringLiteral String::Literal
 #define FluctuantLiteral String::FluctuantLiteral
 #define SecureLiteral String::SecureLiteral
+    
+#pragma mark - Unicode (www.unicode.org)
+
+ struct UnicodeCategory {
+   
+   enum Symbol { mark, number, punctuation, symbol, separator, uppercase,
+     lowercase, titlecase, nonspacing, spacingCombining, enclosing,
+     decimalDigit, connector, dash, open, close, initialQuote, finalQuote, math,
+     currency, space, line, paragraph, control, format, surrogate, privateUse,
+     notAssigned, letter, modifier, other };
+   
+    Symbol master, subcat;
+ };
+ 
+ struct CharacterInfo {
+    const char *look;
+    const char *names[4];
+    UnicodeCategory category;
+    __builtin_int_t combiningclass; // non-combining=0,
+    const char *refs; // Sorted sequence of notable chars
+ };
+ 
+ MACRO bool EightBitHasPrefix(const char *eightBitString, const char *
+   eightBitPrefix) { if (!*eightBitString) { return false; } while (
+   *eightBitString && *eightBitPrefix) { if(*eightBitString++ != *
+   eightBitPrefix++) return false; } return true; }
+ 
+ extern CharacterInfo unicodes[];
+ 
+ MACRO bool UnicodeIsFormat(char32_t c) { return unicodes[c].category.master == UnicodeCategory::other && unicodes[c].category.subcat == UnicodeCategory::format; } // Doesn't have a visible appearance, but may have an effect on the appearance or behavior of neighboring characters. e.g 200c zero width non-joiner, 200d zero width joiner
+ MACRO bool UnicodeIsControl(char32_t c) { return unicodes[c].category.master == UnicodeCategory::other && unicodes[c].category.subcat == UnicodeCategory::control; }
+ MACRO bool UnicodeIsPrivateUse(char32_t c) { return (0xE000 <= c && c <= 0xF8FF) || (0xF0000 <= c && c <= 0xFFFFD) || (0x100000 <= c && c <= 0x10FFFD); }
+ MACRO bool UnicodeIsUnassigned(char32_t c) { return (0x1FF80 <= c && c <= 0x1FFFF) || (0x2FFFE <= c && c <= 0x2FFFF) || (0xEFF80 <= c && c <= 0xEFFFF); }
+ MACRO bool UnicodeIsCombining(char32_t c) { return (0x0300 <= c && c <= 0x036F) || (0x1AB0 <= c && c <= 0x1AFF) || (0x1DC0 <= c && c <= 0x1DFF) || (0x20D0 <= c && c <= 0x20FF) || (0xFE20 <= c && c <= 0xFE2F); }
+ 
+ /**  Given a Unicode character, return textual description. */
+ 
+ MACRO const char * UnicodePrimaryName(char32_t c) { return unicodes[c].names[0]; }
+ 
+ /**  Given a Unicode character, return category. */
+ 
+ MACRO UnicodeCategory UnicodeCategory(char32_t c) { return unicodes[c].category; }
+ 
+ /**  Given a textual description, return corresponding character. */
+ 
+ MACRO char32_t Unicode(const char * eightBitDescr) { char32_t i = 0; while (
+   unicodes[i].combiningclass != TriboolUnknown) { if (EightBitHasPrefix(
+   (char *)(unicodes[i].names[0]), (char *)eightBitDescr)) return i; i++; }
+   return 0; }
+ 
+ typedef Optional<Tuple<__builtin_int_t, __builtin_int_t>> UnicodesAndBytes;
+ UnicodesAndBytes Utf8TraverseNullterminated(uint8_t *p, __builtin_int_t
+   maxlength, void (^stream)(__builtin_int_t, uint8_t*, __builtin_int_t) =
+   ^(__builtin_int_t graphemeIdx, uint8_t *p, __builtin_int_t bytes) {});
+ char32_t Utf8ToUnicode(uint8_t *p, __builtin_int_t bytes);
+ 
+#pragma mark - Traversing a Unicode String (See http://unicode.org/reports/tr29/)
+    
+ typedef struct Utf8Location {
+    uint8_t * start;
+    __builtin_int_t bytesOffset;
+ } Utf8Location;
+ 
+ typedef struct UnicodeLocation {
+    MemoryRegion * region;
+    __builtin_int_t bytesOffset;
+ } UnicodeLocation;
+ 
+ typedef struct UnicodeInterval {
+    UnicodeLocation closedBegin;
+    UnicodeLocation closedEnd;
+ } UnicodeInterval;
+ 
+ typedef struct GraphemeCluster {
+    UnicodeLocation location;
+    __builtin_int_t bytes;
+ } GraphemeCluster;
+ 
+ typedef struct UnicodeBeam {
+    UnicodeLocation location;
+    Optional<SemanticPointer<char32_t *>>
+    unicodeLook(
+        __builtin_int_t unicodesAhead,
+        BinaryChoice direction
+    ) const;
+    Optional<GraphemeCluster>
+    clusterLook(
+        __builtin_int_t clustersAhead,
+        BinaryChoice direction
+    ) const;
+ } UnicodeBeam;
+ 
+ /**  Sets @c beam to beginning of string. */
+ 
+ INLINED void UnicodeBeamInitialize(String &s, UnicodeBeam *beam, bool atEnd);
+ 
+ /**  Advance @c beam one grapheme. */
+ 
+ INLINED int UnicodeNext(UnicodeBeam *beam, BinaryChoice direction,
+   __builtin_int_t steps = 1);
+ 
+ /**  Revert @c beam one grapheme. */
+ 
+ INLINED int UnicodePrevious(UnicodeBeam *beam, BinaryChoice direction,
+   __builtin_int_t steps = 1);
+ 
+ /**  Inserts a presumably decorative character at `loc`.  */
+ 
+ INLINED void UnicodeCompose(UnicodeLocation location, char32_t c);
+ 
+ /**  Removes the n'th composed character. */
+ 
+ INLINED void UnicodeDecompose(UnicodeLocation location, unsigned combiningIndex); // 0 is the last composed character
+ 
+ /**  Return the number of combining characters following beam. */
+ 
+ __builtin_int_t UnicodeCombiningCount(UnicodeBeam *beam, BinaryChoice direction);
+ 
+ /**
+  
+  Decompose two precomposed graphemes into graphemes without precomposition.
+  
+  */
+ 
+ INLINED int UnicodeCanonicalDecomposition(GraphemeCluster lhs, GraphemeCluster
+   rhs, void (^touchbase)(GraphemeCluster &l, GraphemeCluster &r));
+ 
+ /**
+  
+  Compose grapheme streams into precomposed graphemes. Idempotent composition
+  of ligatures.
+  
+  */
+ 
+ INLINED int UnicodeCanonicalComposition(GraphemeCluster lhs, GraphemeCluster
+   rhs, bool (^touchbase)(GraphemeCluster &l, GraphemeCluster &r));
+ 
+#pragma mark Unicode Grapheme Cluster Comparision
+ 
+ MACRO
+ bool
+ IsNotEqual(
+     GraphemeCluster lhs,
+     GraphemeCluster rhs
+ )
+ {
+     return UnicodeCanonicalComposition(lhs, rhs,
+       ^(GraphemeCluster &lhs, GraphemeCluster &rhs) {
+        
+        for (__builtin_int_t pos = 0; lhs.bytes == rhs.bytes &&
+          pos < Relative<__builtin_int_t>::min(lhs.bytes, rhs.bytes); pos++) {
+        // if (*(lhs.start + pos) != *(rhs.start + pos)) return true;
+        }
+        
+        return lhs.bytes == rhs.bytes;
+    });
+ }
+
+#pragma mark Unicode String Comparision
+ 
+ /**  Return @c true if @c lhs and @c rhs contains equal normalized strings. */
+ 
+ MACRO bool IsEqual(String lhs, String rhs) {
+    
+    UnicodeBeam l, r; UnicodeBeamInitialize(lhs, &l, false);
+    UnicodeBeamInitialize(rhs, &r, false);
+    
+ again:
+    
+    __builtin_int_t lc = UnicodeCombiningCount(&l, BinaryChoiceToRight);
+    __builtin_int_t rc = UnicodeCombiningCount(&r, BinaryChoiceToRight);
+    
+    if (lc != 0 && rc != 0) {
+        if (lc == rc) {
+        //    auto lgc = GraphemeCluster { l.unicode, lc };
+        //    auto rgc = GraphemeCluster { r.unicode, rc };
+        
+        //    if (IsNotEqual(lgc, rgc)) return false;
+        //    else {
+            UnicodeNext(&r, BinaryChoiceToLeft);
+            UnicodeNext(&l, BinaryChoiceToLeft);
+            goto again;
+        //    }
+        } else { return false; }
+     
+     } else { return lc == 0 && rc == 0; }
+ }
+ 
+ enum class UnicodeDifference { casing, capitalization, decoration, spacing,
+   figure, quotes, math, interpunctuation, word };
+ 
+ int UnicodeNonapproximativeCompare(String left, String right,
+   bool normalizeBeforeComparision,
+   void (^completion)(bool isEqual) = ^(bool isEqual) {},
+   bool (^acceptable)(UnicodeDifference delta, bool& stop) =
+     ^(UnicodeDifference delta, bool& stop) { return false; },
+   void (^ping)(bool& stop) = ^(bool& stop) {}
+ );
+ 
+#pragma mark Utf-8 O(n)'s
+ 
+ MACRO bool Utf8IsEqual(const char *utf8Left, const char *utf8Right) { while
+   (*utf8Left && *utf8Right) { if (*utf8Left++ != *utf8Right++) return false; }
+   return true; }
+ 
+ /**  Old-style canonized file path, interval, firstLine ╳ lastLine ∈ [0, ⃨,n-1]. */
+ 
+ typedef Tuple<String, UnicodeInterval, Tuple<__builtin_int_t, __builtin_int_t>> SourceLocation; // ☜😐🇵🇱: ? 🔍≥ ∨ ?
 
 #pragma mark - The Vector: Multiple Same-sized Items, yet possily Growing
 
 /**  In-memory growth direction. */
 
-enum class PhysicalDirection { TowardsEnd, TowardsBeginning };
+ enum class PhysicalDirection { TowardsEnd, TowardsBeginning };
 
 /**  Shared management between the Vector and the Matrix. */
 
-struct Table {
+ struct Table {
     
     Table(__builtin_int_t c, __builtin_int_t sz) { count = c; bytesEach = sz; }
     
@@ -579,14 +787,14 @@ struct Table {
     
     MACRO __builtin_int_t bytes() const { return count*bytesEach; }
     
-protected:
+ protected:
     
     __builtin_int_t count; __builtin_int_t bytesEach;
     
-};
+ };
 
-template <typename T>
-struct Vector : public Table /*, public Mitigate<T, Vector<T>> */ {
+ template <typename T>
+ struct Vector : public Table /*, public Mitigate<T, Vector<T>> */ {
     
     __builtin_int_t available; MemoryRegion memoryRegion;
     
@@ -716,224 +924,17 @@ struct Vector : public Table /*, public Mitigate<T, Vector<T>> */ {
     MACRO T& last() BLURTS { __builtin_int_t l = count() - 1;  if (l < 0) {
       Error(ErrorCode::accessViolation); } return get(l); }
     
-};
+ };
 
-#pragma mark - Unicode
+#pragma mark - Streams
 
-struct UnicodeCategory {
-    enum Symbol { mark, number, punctuation, symbol, separator,
-        uppercase, lowercase, titlecase, nonspacing, spacingCombining,
-        enclosing, decimalDigit, connector, dash, open, close, initialQuote,
-        finalQuote, math, currency, space, line, paragraph, control, format,
-        surrogate, privateUse, notAssigned, letter, modifier, other };
-    Symbol master, subcat;
-};
-
-struct CharacterInfo {
-    const char *look;
-    const char *names[4];
-    UnicodeCategory category;
-    __builtin_int_t combiningclass; // non-combining=0,
-    const char *refs; // Sorted sequence of notable chars
-};
-
-MACRO bool EightBitHasPrefix(const char *eightBitString, const char *eightBitPrefix) { if (!*
-  eightBitString) { return false; } while (*eightBitString && *eightBitPrefix)
-  { if(*eightBitString++ != *eightBitPrefix++) return false; } return true; }
-
-extern CharacterInfo unicodes[];
-
-MACRO bool UnicodeIsFormat(char32_t c) { return unicodes[c].category.master == UnicodeCategory::other && unicodes[c].category.subcat == UnicodeCategory::format; } // Doesn't have a visible appearance, but may have an effect on the appearance or behavior of neighboring characters. e.g 200c zero width non-joiner, 200d zero width joiner
-MACRO bool UnicodeIsControl(char32_t c) { return unicodes[c].category.master == UnicodeCategory::other && unicodes[c].category.subcat == UnicodeCategory::control; }
-MACRO bool UnicodeIsPrivateUse(char32_t c) { return (0xE000 <= c && c <= 0xF8FF) || (0xF0000 <= c && c <= 0xFFFFD) || (0x100000 <= c && c <= 0x10FFFD); }
-MACRO bool UnicodeIsUnassigned(char32_t c) { return (0x1FF80 <= c && c <= 0x1FFFF) || (0x2FFFE <= c && c <= 0x2FFFF) || (0xEFF80 <= c && c <= 0xEFFFF); }
-MACRO bool UnicodeIsCombining(char32_t c) { return (0x0300 <= c && c <= 0x036F) || (0x1AB0 <= c && c <= 0x1AFF) || (0x1DC0 <= c && c <= 0x1DFF) || (0x20D0 <= c && c <= 0x20FF) || (0xFE20 <= c && c <= 0xFE2F); }
-
-/**  Given a Unicode character, return textual description. */
-
-MACRO const char * UnicodePrimaryName(char32_t c) { return unicodes[c].names[0]; }
-
-/**  Given a Unicode character, return category. */
-
-MACRO UnicodeCategory UnicodeCategory(char32_t c) { return unicodes[c].category; }
-
-/**  Given a textual description, return corresponding character. */
-
-MACRO char32_t Unicode(const char * eightBitDescr) { char32_t i = 0; while (
-  unicodes[i].combiningclass != TriboolUnknown) { if (EightBitHasPrefix(
-  (char *)(unicodes[i].names[0]), (char *)eightBitDescr)) return i; i++; }
-  return 0; }
-
-typedef Optional<Tuple<__builtin_int_t, __builtin_int_t>> UnicodesAndBytes;
-UnicodesAndBytes Utf8TraverseNullterminated(uint8_t *p, __builtin_int_t
-  maxlength, void (^stream)(__builtin_int_t, uint8_t*, __builtin_int_t) =
-    ^(__builtin_int_t graphemeIdx, uint8_t *p, __builtin_int_t bytes) {});
-char32_t Utf8ToUnicode(uint8_t *p, __builtin_int_t bytes);
-
-#pragma mark - Traversing a Unicode String (See http://unicode.org/reports/tr29/)
-
-typedef struct Utf8Location {
-    uint8_t * start;
-    __builtin_int_t bytesOffset;
-} Utf8Location;
-
-typedef struct UnicodeLocation {
-    MemoryRegion * region;
-    __builtin_int_t bytesOffset;
-} UnicodeLocation;
-
-typedef struct UnicodeInterval {
-    UnicodeLocation closedBegin;
-    UnicodeLocation closedEnd;
-} UnicodeInterval;
-
-typedef struct GraphemeCluster {
-    UnicodeLocation location;
-    __builtin_int_t bytes;
-} GraphemeCluster;
-
-typedef struct UnicodeBeam {
-    UnicodeLocation location;
-    Optional<SemanticPointer<char32_t *>>
-    unicodeLook(
-        __builtin_int_t unicodesAhead,
-        BinaryChoice direction
-    ) const;
-    Optional<GraphemeCluster>
-    clusterLook(
-        __builtin_int_t clustersAhead,
-        BinaryChoice direction
-    ) const;
-} UnicodeBeam;
-
-/**  Sets @c beam to beginning of string. */
-
-INLINED void UnicodeBeamInitialize(String &s, UnicodeBeam *beam,
-  bool atEnd);
-
-/**  Advance @c beam one grapheme. */
-
-INLINED int UnicodeNext(UnicodeBeam *beam, BinaryChoice direction,
-  __builtin_int_t steps = 1);
-
-/**  Revert @c beam one grapheme. */
-
-INLINED int UnicodePrevious(UnicodeBeam *beam, BinaryChoice
-    direction, __builtin_int_t steps = 1);
-
-/**  Inserts a presumably decorative character at `loc`.  */
-
-INLINED void UnicodeCompose(UnicodeLocation location, char32_t c);
-
-/**  Removes the n'th composed character. */
-
-INLINED void UnicodeDecompose(UnicodeLocation location, unsigned combiningIndex); // 0 is the last composed character
-
-/**  Return the number of combining characters following beam. */
-
-__builtin_int_t UnicodeCombiningCount(UnicodeBeam *beam, BinaryChoice direction);
-
-/**
- 
- Decompose two precomposed graphemes into graphemes without precomposition.
- 
- */
-
-INLINED int UnicodeCanonicalDecomposition(GraphemeCluster lhs, GraphemeCluster
-  rhs, void (^touchbase)(GraphemeCluster &l, GraphemeCluster &r));
-
-/**
- 
- Compose grapheme streams into precomposed graphemes. Idempotent composition
- of ligatures.
- 
- */
-
-INLINED int UnicodeCanonicalComposition(GraphemeCluster lhs, GraphemeCluster
-  rhs, bool (^touchbase)(GraphemeCluster &l, GraphemeCluster &r));
-
-#pragma mark Unicode GraphemeCluster Comparision
-
-MACRO
-bool
-IsNotEqual(
-    GraphemeCluster lhs,
-    GraphemeCluster rhs
-)
-{
-    return UnicodeCanonicalComposition(lhs, rhs,
-        ^(GraphemeCluster &lhs, GraphemeCluster &rhs) {
-            
-            for (__builtin_int_t pos = 0; lhs.bytes == rhs.bytes &&
-                 pos < Relative<__builtin_int_t>::min(lhs.bytes, rhs.bytes); pos++) {
-                // if (*(lhs.start + pos) != *(rhs.start + pos)) return true;
-            }
-            
-            return lhs.bytes == rhs.bytes;
-    });
-}
-
-#pragma mark Unicode String Comparision
-
-/**  Return @c true if @c lhs and @c rhs contains equal normalized strings. */
-
-MACRO bool IsEqual(String lhs, String rhs) {
-    
-    UnicodeBeam l, r; UnicodeBeamInitialize(lhs, &l, false);
-    UnicodeBeamInitialize(rhs, &r, false);
-    
-again:
-    
-    __builtin_int_t lc = UnicodeCombiningCount(&l, BinaryChoiceToRight);
-    __builtin_int_t rc = UnicodeCombiningCount(&r, BinaryChoiceToRight);
-    
-    if (lc != 0 && rc != 0) {
-        if (lc == rc) {
-//            auto lgc = GraphemeCluster { l.unicode, lc };
-//            auto rgc = GraphemeCluster { r.unicode, rc };
-              
-//            if (IsNotEqual(lgc, rgc)) return false;
-//            else {
-                UnicodeNext(&r, BinaryChoiceToLeft);
-                UnicodeNext(&l, BinaryChoiceToLeft);
-                goto again;
-//            }
-        } else { return false; }
-    
-    } else { return lc == 0 && rc == 0; }
-}
-    
-enum class UnicodeDifference { casing, capitalization, decoration, spacing,
-  figure, quotes, math, interpunctuation, word };
-    
-int
-UnicodeNonapproximativeCompare(String left, String right,
-    bool normalizeBeforeComparision,
-    void (^completion)(bool isEqual) = ^(bool isEqual) {},
-    bool (^acceptable)(UnicodeDifference delta, bool& stop) =
-      ^(UnicodeDifference delta, bool& stop) { return false; },
-    void (^ping)(bool& stop) = ^(bool& stop) {}
-);
-
-#pragma mark Utf-8 O(n)'s 
-
-MACRO bool Utf8IsEqual(const char *utf8Left, const char *utf8Right) { while
-  (*utf8Left && *utf8Right) { if (*utf8Left++ != *utf8Right++) return false; }
-  return true; }
-
-/**  Old-style canonized file path, interval, firstLine ╳ lastLine ∈ [0, ⃨,n-1]. */
-
-typedef Tuple<String, UnicodeInterval, Tuple<__builtin_int_t, __builtin_int_t>> SourceLocation; // ☜😐🇵🇱: ? 🔍≥ ∨ ?
-
-#pragma mark Streams
-
-struct InputStream LONGTOOTH {
+ struct InputStream LONGTOOTH {
     virtual __builtin_int_t read(uint8_t *p, __builtin_int_t maxBytes) = 0;
-};
+ };
 
-struct OutputStream LONGTOOTH {
+ struct OutputStream LONGTOOTH {
     virtual __builtin_int_t write(uint8_t *p, __builtin_int_t bytes) = 0;
-};
+ };
 
 #pragma mark - Stream I/O
 
@@ -1033,12 +1034,12 @@ struct TypedExpression {
  
  template <typename T>
  MACRO
- octa hash(T *p) {
+ sexdeca hash(T *p) {
      
-     __block octa res;
+     __block sexdeca res;
      
      HwHash((uint8_t *)p, sizeof(T), ^(bool &stop) {}, ^(uint64_t digest[4]) {
-         res.whole = _mm_set_epi64x(digest[0], digest[1]);
+         res.sexdeca = _mm_set_epi64x(digest[0], digest[1]);
      });
      
      return res;
@@ -1076,7 +1077,7 @@ FINAL struct DecoratedString : Mitigate<DecoratedString, DecoratedString> {
     
 #pragma mark Misc
     
-    MemoryRegion * graphemes();
+    MemoryRegion * unicodes();
     
 😐;
     
@@ -1178,9 +1179,13 @@ namespace ComposingStick {
  MACRO Utf8Terminal & operator<<(Utf8Terminal &term, String s)
  { auto ds = ComposingStick::compose(s, typedIn(Typecase::Bold));
   term << ds; return term; }
- 
- MACRO Utf8Terminal & operator<<(Utf8Terminal &term, const char *c)
- { String s = StringLiteral(c); term << s; return term; }
+
+ MACRO Utf8Terminal & operator<<(Utf8Terminal &term, const char32_t *unicodes)
+ { String s = StringLiteral(Endianness::Native, unicodes, -1); term << s;
+  return term; }
+    
+ MACRO Utf8Terminal & operator<<(Utf8Terminal &term, const char * utf8)
+ { String s = StringLiteral(utf8); term << s; return term; }
  
  MACRO Utf8Terminal & operator<<(Utf8Terminal &term, char c)
  { char buf[2]; buf[0] = c; buf[1] = 0; term << buf; return term; }
