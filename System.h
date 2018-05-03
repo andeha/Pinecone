@@ -259,13 +259,17 @@ namespace Naturals {
  
  extern "C" INLINED double sqrt(double x); // An exception is thrown when x < 0
  
- /**  Axiomatization */
+/**  Compute reciprocal square root of @c x. */
+ 
+ extern "C" INLINED float rsqrt(float x);
+ 
+/**  Axiomatization */
  
  /** AX_: */ extern "C" INLINED double arctan(double x);
  
  /** AX_: */ FOCAL extern "C" INLINED void sincos(double x, double *s, double *c);
  
- /** AX_: */ FOCAL extern "C" INLINED __builtin_int_t pinecone_floor(double x);
+ /** AX_: */ FOCAL extern "C" INLINED double pinecone_floor(double x);
  
 #pragma mark - Integer to String and Radix Conversion
 
