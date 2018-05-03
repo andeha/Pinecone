@@ -181,7 +181,7 @@ namespace Naturals {
     struct { int16_t lsh; uint16_t msh; } little_endian;
     struct { int16_t msh; uint16_t lsh; } big_endian;
     struct {
-        unsigned mantissa : 24;
+        unsigned mantissa : 23;
         unsigned exponent :  8;
         unsigned sign     :  1;
     } ieee754;
@@ -214,7 +214,7 @@ namespace Naturals {
  #define IEEE754BASE2_64BIT_NINF   0xfff0000000000000L
  #define IEEE754BASE2_32BIT_QNAN   0x7FC00000
  
- MACRO float abs64s(float x) { tetra t; t.base2 = x; t.ieee754.sign = 0; return t.base2; }
+ MACRO float abs32s(float x) { tetra t; t.base2 = x; t.ieee754.sign = 0; return t.base2; }
  MACRO double abs64d(double x) { octa o; o.base2 = x; o.ieee754.sign = 0; return o.base2; }
  
  template <typename T> MACRO T abs(T x) { return x < 0 ? -x : x; }
@@ -558,9 +558,9 @@ private:
 #define StringLiteral String::Literal
 #define FluctuantLiteral String::FluctuantLiteral
 #define SecureLiteral String::SecureLiteral
-    
-#pragma mark - Unicode (www.unicode.org)
 
+#pragma mark - Unicode (www.unicode.org)
+ 
  struct UnicodeCategory {
    
    enum Symbol { mark, number, punctuation, symbol, separator, uppercase,
@@ -568,7 +568,7 @@ private:
      decimalDigit, connector, dash, open, close, initialQuote, finalQuote, math,
      currency, space, line, paragraph, control, format, surrogate, privateUse,
      notAssigned, letter, modifier, other };
-   
+    
     Symbol master, subcat;
  };
  
@@ -608,14 +608,14 @@ private:
    (char *)(unicodes[i].names[0]), (char *)eightBitDescr)) return i; i++; }
    return 0; }
  
- typedef Optional<Tuple<__builtin_int_t, __builtin_int_t>> UnicodesAndBytes;
- UnicodesAndBytes Utf8TraverseNullterminated(uint8_t *p, __builtin_int_t
-   maxlength, void (^stream)(__builtin_int_t, uint8_t*, __builtin_int_t) =
-   ^(__builtin_int_t graphemeIdx, uint8_t *p, __builtin_int_t bytes) {});
- char32_t Utf8ToUnicode(uint8_t *p, __builtin_int_t bytes);
+  typedef Optional<Tuple<__builtin_int_t, __builtin_int_t>> UnicodesAndBytes;
+  UnicodesAndBytes Utf8TraverseNullterminated(uint8_t *p, __builtin_int_t
+    maxlength, void (^stream)(__builtin_int_t, uint8_t*, __builtin_int_t) =
+    ^(__builtin_int_t graphemeIdx, uint8_t *p, __builtin_int_t bytes) {});
+  char32_t Utf8ToUnicode(uint8_t *p, __builtin_int_t bytes);
  
 #pragma mark - Traversing a Unicode String (See http://unicode.org/reports/tr29/)
-    
+ 
  typedef struct Utf8Location {
     uint8_t * start;
     __builtin_int_t bytesOffset;
@@ -709,13 +709,13 @@ private:
         
         for (__builtin_int_t pos = 0; lhs.bytes == rhs.bytes &&
           pos < Relative<__builtin_int_t>::min(lhs.bytes, rhs.bytes); pos++) {
-        // if (*(lhs.start + pos) != *(rhs.start + pos)) return true;
+            // if (*(lhs.start + pos) != *(rhs.start + pos)) return true;
         }
         
         return lhs.bytes == rhs.bytes;
     });
  }
-
+ 
 #pragma mark Unicode String Comparision
  
  /**  Return @c true if @c lhs and @c rhs contains equal normalized strings. */
@@ -742,7 +742,7 @@ private:
             goto again;
         //    }
         } else { return false; }
-     
+        
      } else { return lc == 0 && rc == 0; }
  }
  
@@ -763,10 +763,20 @@ private:
    (*utf8Left && *utf8Right) { if (*utf8Left++ != *utf8Right++) return false; }
    return true; }
  
- /**  Old-style canonized file path, interval, firstLine ╳ lastLine ∈ [0, ⃨,n-1]. */
+/**  Old-style canonized file path, interval, firstLine ╳ lastLine ∈ [0, ⃨,n-1]. */
  
  typedef Tuple<String, UnicodeInterval, Tuple<__builtin_int_t, __builtin_int_t>> SourceLocation; // ☜😐🇵🇱: ? 🔍≥ ∨ ?
-
+ 
+#pragma mark - Converting the IEEE 754-2008 base-2 to a Textual Representation
+ 
+ ENCLAVED
+ void
+ CastToText(
+    double value,
+    void (^digits)(bool neg, int e, const char *zeroToNineAndNull),
+    void (^zero)(), void (^inf)(), void (^nan)()
+ ); // 101.01, 3.141592654, 1.01e7, 1.4 * 10^5, 14kΩ and hypothetically other formats.
+ 
 #pragma mark - The Vector: Multiple Same-sized Items, yet possily Growing
 
 /**  In-memory growth direction. */
@@ -1182,6 +1192,10 @@ namespace ComposingStick {
 
  MACRO Utf8Terminal & operator<<(Utf8Terminal &term, const char32_t *unicodes)
  { String s = StringLiteral(Endianness::Native, unicodes, -1); term << s;
+  return term; }
+
+ MACRO Utf8Terminal & operator<<(Utf8Terminal &term, char32_t unicode)
+ { String s = StringLiteral(Endianness::Native, &unicode, 1); term << s;
   return term; }
     
  MACRO Utf8Terminal & operator<<(Utf8Terminal &term, const char * utf8)
