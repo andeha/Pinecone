@@ -144,6 +144,7 @@ UNITTEST(Sqrt_1)
     ENSURE(Similar(y, 1.73205, epsilon), "Error in Sqrt_1 4");
 }
 
+MACRO
 INNER_FUNCTION
 float rsqrt_alt(float x)
 {
@@ -157,15 +158,80 @@ float rsqrt_alt(float x)
 
 UNITTEST(RSqrt_1)
 {
-    MEASURE_START(SSE)
-        float x = rsqrt(10);
-    MEASURE_END(SSE)
+    MEASURE_START(SSE_RSQRT)
+    float x = rsqrt(10);
+    MEASURE_END(SSE_RSQRT)
     
-    MEASURE_START(SEQUENTIAL)
-        float y = rsqrt_alt(10);
-    MEASURE_END(SEQUENTIAL)
+    MEASURE_START(SEQUENTIAL_RSQRT)
+    float y = rsqrt_alt(10);
+    MEASURE_END(SEQUENTIAL_RSQRT)
     
     ENSURE(Similar(x - y, 0.0, epsilon), "Error in RSqrt_1");
+}
+
+// #include <fenv.h>
+
+MACRO
+INNER_FUNCTION
+__builtin_int_t SSE_CastNFloor(double d)
+{
+    // SSE rounding mode defaults to "round to nearest"
+    uint32_t csr = _mm_getcsr();
+    _mm_setcsr((csr & ~(_MM_ROUND_MASK)) | _MM_ROUND_DOWN);
+    __m128d x = { d, d };
+    int64_t result = _mm_cvtsd_si64(x);
+    _mm_setcsr(csr);
+    return result;
+}
+
+INNER_FUNCTION
+__attribute__((target("avx2")))
+__attribute__((target("avx512f")))
+__builtin_int_t AVX512_CastNFloor(double d)
+{
+    __m128d x = { d, d };
+    return _mm_cvt_roundsd_i64(x, _MM_FROUND_TO_NEG_INF | _MM_FROUND_NO_EXC);
+}
+
+MACRO
+INNER_FUNCTION
+__builtin_int_t Language_RoundToNearest(double d)
+{
+    return d < 0 ? (__builtin_int_t)(d - 0.5) : (__builtin_int_t)(d + 0.5);
+}
+
+MACRO
+INNER_FUNCTION
+__builtin_int_t Language_TruncateTowardsZero(double d)
+{
+    return (__builtin_int_t)d; // truncate toward zero
+}
+
+UNITTEST(FloorNCast_1) // Should cast towards negative infinity.
+{
+    MEASURE_START(SSE_CASTNFLOOR)
+    __builtin_int_t x1 = SSE_CastNFloor(Naturals::π);
+    __builtin_int_t x2 = SSE_CastNFloor(Naturals::e);
+    __builtin_int_t x3 = SSE_CastNFloor(-Naturals::e);
+    __builtin_int_t x4 = SSE_CastNFloor(-Naturals::π);
+    MEASURE_END(SSE_CASTNFLOOR)
+    
+    ENSURE(Similar(x1, 3.0, epsilon), "Error in  π");
+    ENSURE(Similar(x2, 2.0, epsilon), "Error in  e");
+    ENSURE(Similar(x3, -3.0, epsilon), "Error in -e");
+    ENSURE(Similar(x4, -4.0, epsilon), "Error in -π");
+    
+    MEASURE_START(LANGUAGE_ROUND_TO_NEARSET)
+    __builtin_int_t y1 = Language_RoundToNearest(Naturals::π);
+    __builtin_int_t y2 = Language_RoundToNearest(Naturals::e);
+    __builtin_int_t y3 = Language_RoundToNearest(-Naturals::e);
+    __builtin_int_t y4 = Language_RoundToNearest(-Naturals::π);
+    MEASURE_END(LANGUAGE_ROUND_TO_NEARSET)
+    
+    ENSURE(Similar(y1, 3.0, epsilon), "Error in  π");
+    ENSURE(Similar(y2, 3.0, epsilon), "Error in  e");
+    ENSURE(Similar(y3, -3.0, epsilon), "Error in -e");
+    ENSURE(Similar(y4, -3.0, epsilon), "Error in -π");
 }
 
 UNITTEST(Arctan_1)
@@ -201,6 +267,6 @@ UNITTEST(Sincos_1)
 UNITTEST(Floor_1)
 {
     double y = pinecone_floor(1.5);
-    ENSURE(Similar(y, 1.0, epsilon), "Error in Floor_1 1");
+    ENSURE(Similar(y, 1.0, epsilon), "Error when pinecone_floor 1");
 }
 
