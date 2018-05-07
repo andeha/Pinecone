@@ -72,7 +72,7 @@ bool BarelyReminiscent(__builtin_int_t a, __builtin_int_t b, __builtin_uint_t ğ
 #endif
 }
 
-#pragma mark - Output Primititves
+#pragma mark - Output Primitives
 
 int
 Roman(
