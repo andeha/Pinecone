@@ -61,6 +61,6 @@ struct SlowRandom { // 😐🎲 See [Unittests]>--<SyncTests.cpp>{Synchronizatio
     
 😐;
 
-#define 🎲(sides) { uint64_t value, SlowRandom rnd(&value, SlowRandom::Solution::RAND), rnd.update(), value % sides; }
+#define 🎲(sides) ({ uint64_t value; SlowRandom rnd(&value, SlowRandom::Solution::RAND); rnd.update(); (value % sides) + 1; });
 
 #endif
