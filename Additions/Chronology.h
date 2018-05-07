@@ -8,6 +8,8 @@
 
 #include <Pinecone.h>
 
+// #define NTP_VIA_WIFI
+
 /**
      
      Timestamps, timezones, calendric increments and NTP clock synchronization.
@@ -38,19 +40,16 @@ struct Chronology {
     
     /**
      
-     In this class, a timezone alters the instant with a positive or negative
-     number of hours.
-     
-     TODO: Maybe daylight saving and fractional offsets.
+     A timezone alters an instant with a positive or negative number of minutes.
      
      */
     
-    typedef uint64_t Timezone;
+    typedef int32_t Timezone;
     
 #pragma mark Constructors and Destructors
     
     Chronology(
-        Vector<String> userTimesources = {}, // 🎓 'I promise to replace one or more.' ☜😐
+        Vector<const char *> userTimesources = {}, // 🎓 'I promise to replace one or more.' ☜😐
         Timezone tz = Chronology::UTC()
     );
     
@@ -73,22 +72,20 @@ struct Chronology {
      
      */
     
-#ifndef NO_NTP_VIA_WIFI
     bool onceSynchronized() const;
-#endif
     
     /**
      
      The current version of the NTP sends a request and then listens for
-     responses via UDP (which has been suceptible to denial of service
-     attacks in the past.)
+     responses via UDP (which has been suceptible to denial of service attacks
+     in the past.)
      
      */
     
-#ifndef NO_NTP_VIA_WIFI
-    void
+#ifdef NTP_VIA_WIFI
+    int
     synchronize(
-        void (^ping)(String *ip, Timestamp instant)
+        void (^ping)(const char *ip, Timestamp instant)
     ) const;
 #endif
     
@@ -102,14 +99,26 @@ struct Chronology {
     
 #pragma mark - Creation and Interpretation of an Instant
     
-    /**  Given a timestamp, return year, month (1-12) and day (1-31). 
-     
-     Consider representing dates x = ((y<<4 + m)<<5+d, where 
-     d = x mod 32, m = (x>>5) mod 16, y = x>>9
-     
-     */
+    /**  Given a timestamp, return year, month (1-12) and day (1-31). */
     
-    Tuple<int64_t, int64_t, int64_t> date(Timestamp instant) const;
+    Tuple<int32_t, int32_t, int32_t> date(Timestamp instant) const;
+    
+#pragma mark - A Relatively Compact Date
+    
+    typedef int32_t Date;
+    
+    static Date toDate(Tuple<int32_t, int32_t, int32_t> yearMonthDay) {
+        int32_t y = get<0>(yearMonthDay), m = get<1>(yearMonthDay),
+          d = get<2>(yearMonthDay); // Consider c++17 structured bindings while in another instant
+        return (((y<<4) + m) << 5) + d;
+    }
+    
+    static Tuple<int32_t, int32_t, int32_t> fromDate(Date date) {
+        int32_t d = date % 32, m = (date >> 5) % 16, y = date >> 9;
+        return Tuple<int32_t, int32_t, int32_t>(y, m, d);
+    }
+    
+#pragma mark - There and Back
     
     /**
      
@@ -118,7 +127,8 @@ struct Chronology {
      
      */
     
-    Tuple<int64_t, int64_t, int64_t, uint32_t> sinceMidnight(Timestamp instant) const;
+    Tuple<int32_t, int32_t, int32_t, uint32_t>
+    sinceMidnight(Timestamp instant) const;
     
     /**
      
@@ -129,10 +139,10 @@ struct Chronology {
      
      @param fractSec  Fractional seconds currently expected to be a 32 bit
          unsigned value expressing the number of 232 ps intervals.
-          
+     
      */
     
-    Timestamp timestamp(int64_t parts[6], uint32_t fractSec) const;
+    Timestamp timestamp(int32_t parts[6], uint32_t fractSec) const;
     
 #pragma mark - Δt
     
@@ -173,11 +183,11 @@ struct Chronology {
     
     /**  Given a year, return a estimate when easter may expect to occur. */
     
-    Tuple<int64_t, int64_t, int64_t> easter(int64_t year) const;
+    Tuple<__builtin_int_t, __builtin_int_t, __builtin_int_t> easter(__builtin_int_t year) const;
     
     /**  Return @c true if @y is a leap year. */
     
-    static bool isLeapyear(uint64_t year);
+    static bool isLeapyear(__builtin_int_t year);
     
     /**
      
@@ -198,6 +208,15 @@ TS(
     String datetime
 ) NEVERBLURTS;
 
+/**  Convert an instant to a textual representation. */
+
+int
+TimestampToText(
+    Chronology chronology,
+    Chronology::Timestamp instant,
+    void (^touchbase)(char c)
+);
+
 /**  The fractional part in an instant. */
 
 #define TwoThreeTwoPSMultiples(x) x
@@ -216,6 +235,7 @@ ENCLAVED Chronology& MonotonicallyIncreasingChronology();
 
 #pragma mark - Scheduled Sequent
 
+EVOLVING
 FOCAL
 ENCLAVED
 int
