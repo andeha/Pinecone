@@ -736,15 +736,15 @@ private:
     
     if (lc != 0 && rc != 0) {
         if (lc == rc) {
-        //    auto lgc = GraphemeCluster { l.unicode, lc };
-        //    auto rgc = GraphemeCluster { r.unicode, rc };
+        // auto lgc = GraphemeCluster { l.unicode, lc };
+        // auto rgc = GraphemeCluster { r.unicode, rc };
         
-        //    if (IsNotEqual(lgc, rgc)) return false;
-        //    else {
+        // if (IsNotEqual(lgc, rgc)) return false;
+        // else {
             UnicodeNext(&r, BinaryChoiceToLeft);
             UnicodeNext(&l, BinaryChoiceToLeft);
             goto again;
-        //    }
+        // }
         } else { return false; }
         
      } else { return lc == 0 && rc == 0; }
@@ -942,11 +942,11 @@ private:
 
 #pragma mark - Streams
 
- struct InputStream LONGTOOTH {
+ struct Inputstream LONGTOOTH {
     virtual __builtin_int_t read(uint8_t *p, __builtin_int_t maxBytes) = 0;
  };
 
- struct OutputStream LONGTOOTH {
+ struct Outputstream LONGTOOTH {
     virtual __builtin_int_t write(uint8_t *p, __builtin_int_t bytes) = 0;
  };
 
@@ -954,14 +954,14 @@ private:
 
 int
 vfprintf_unicode(
-    OutputStream *stream,
+    Outputstream *stream,
     const char32_t *oneblockFormat,
     __builtin_va_list arg
 );
 
 int
 vfprintf_utf8(
-    OutputStream *stream,
+    Outputstream *stream,
     const char *format,
     __builtin_va_list arg
 );
@@ -1134,15 +1134,16 @@ struct Utf8Terminal {
     
 #pragma mark Streams
     
-    OutputStream * outputStream() const;
-    OutputStream * inputStream() const;
+    Outputstream * outputstream() const;
+    Outputstream * inputstream() const;
     
 😐;
 
 void Present(Utf8Terminal &term, __builtin_int_t z);
 enum class PresentBase { dec, hex, oct, bin };
 void Present(Utf8Terminal &term, __builtin_uint_t n, PresentBase base = PresentBase::dec);
-void Present(Utf8Terminal &term, double value, int decimals = 15, bool scientific = true);
+namespace NumberFormatCatalogue { extern void (^Default)(double x, Utf8Terminal &stream); }
+void Present(Utf8Terminal &term, double value, void (^formatter)(double x, Utf8Terminal &stream) = NumberFormatCatalogue::Default);
 MACRO void Present(Utf8Terminal &term, DecoratedString ds) { term.write(ds); }
 // void Present(Utf8Terminal &term, SourceLocation location);
 
@@ -1185,7 +1186,7 @@ namespace ComposingStick {
  { Present(term, n, PresentBase::hex); return term; }
  
  MACRO Utf8Terminal & operator<<(Utf8Terminal &term, double x)
- { Present(term, x, 15); return term; }
+ { Present(term, x); return term; }
  
  MACRO Utf8Terminal & operator<<(Utf8Terminal &term, DecoratedString s)
  { Present(term, s); return term; }
