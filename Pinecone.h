@@ -280,19 +280,19 @@ struct Exception {
 
 extern "C" { int setjmp2(jmp_buf2 env); void longjmp2(jmp_buf2 env,
   __builtin_int_t val); }
-extern jmp_buf2 _envBuffer;
-#define BLURT(str) longjmp2(_envBuffer, (__builtin_uint_t)str);
+#define BLURT(str) longjmp2(*JmpBuf(), (__builtin_uint_t)str);
 #define MIRROR(str, closure)                            \
-    longjmp2(_envBuffer, (__builtin_uint_t)str,         \
+    longjmp2(*JmpBuf(), (__builtin_uint_t)str,          \
       ^(Exception exception) { closure(exception); });
 #define BLURTS /* Mandatory */
 #define NEVERBLURTS /* Fortunately optional. */
 #define FALLIBLE /* Unfortunately not mandatory while constructor blurts. */
-#define TRY { jmp_buf2 _envBuffer; if (!setjmp2(_envBuffer)) {
+#define TRY { int __e = setjmp2(*JmpBuf()); if (!__e) {
 #define CATCH } else {
 #define END_TRY } }
 #define NOTBLURTING_BEGIN { TRY
 #define NOTBLURTING_END(value) CATCH {} END_TRY; return value; }
+extern "C" jmp_buf2 * JmpBuf();
 
 #pragma mark - Macros Available when 'Git!'
 
