@@ -6,7 +6,7 @@
 #ifndef __PINECONENUCLEUS_H
 #define __PINECONENUCLEUS_H
 
-// The following headers constitute the Pinecone library operating system
+// The following headers constitute the Pinecone library operating system.
 
 #include <Additions/Performance.h>
 #include <Additions/Helpers.h>
