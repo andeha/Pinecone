@@ -118,7 +118,7 @@ namespace Naturals {
     // static T geometricBetween(T x₁, T acc) { return sqrt(x₁ * acc); } // See: Search ☜😐: ⌨️ MMXVII, XXX, ⅳ
     // static T harmonic1Between(T x₁, T acc) { return 1 / sqrt(x₁ * acc); } // See: Padé ☜😐: ⌨️ 🐚, 🐇,
     static Relative<T> leftChange(T x₁, T x₂) { return Relative<T> { (x₁ - x₂) / x₂ }; } // ∈ [0, 1]
-    static Relative<T> rightChange(T x₁, T x₂) { return Relative<T> { (x₂ - x₁) / x₁ }; } // ∈ [0, 1]
+    static Relative<T> rightChange(T x₁, T x₂) { return Relative<T> { (x₂ - x₁) / x₁ }; } // ∉ [0, 1]
     // Norm == Sequence<T>|AccumulativeSequence<T> S, AlgebraicCategory<T> C
     static T diff(T x₁, T x₂) { return x₁ - x₂; }
     static T dist(T x₁, T x₂, T (^N)(T x, T y)) { return N(x₁, x₂); }
@@ -170,11 +170,11 @@ namespace Naturals {
  
  typedef union {
 #ifdef __x86_64__
-    __m256 fourOcta;
+    __m256 ditriaconta;
 #endif
     struct { sexdeca lss; sexdeca mss; } little_endian;
     struct { sexdeca mss; sexdeca lss; } big_endian;
- } hentriaconta;
+ } ditriaconta;
  
  typedef union {
     float base2; // 2^–126 to 2^127 or 1.18 × 10^–38 to 3.40 × 10^38
@@ -589,6 +589,10 @@ private:
    *eightBitString && *eightBitPrefix) { if(*eightBitString++ != *
    eightBitPrefix++) return false; } return true; }
  
+MACRO bool EightBitIsEqual(const char *eightBitLeft, const char *eightBitRight) { while
+  (*eightBitLeft && *eightBitRight) { if (*eightBitLeft++ != *eightBitRight++) return false; }
+  return *eightBitLeft == '\0' && *eightBitRight == '\0'; }
+ 
  extern CharacterInfo unicodes[];
  
  MACRO bool UnicodeIsFormat(char32_t c) { return unicodes[c].category.master == UnicodeCategory::other && unicodes[c].category.subcat == UnicodeCategory::format; } // Doesn't have a visible appearance, but may have an effect on the appearance or behavior of neighboring characters. e.g 200c zero width non-joiner, 200d zero width joiner
@@ -760,12 +764,6 @@ private:
      ^(UnicodeDifference delta, bool& stop) { return false; },
    void (^ping)(bool& stop) = ^(bool& stop) {}
  );
- 
-#pragma mark Utf-8 O(n)'s
- 
- MACRO bool Utf8IsEqual(const char *utf8Left, const char *utf8Right) { while
-   (*utf8Left && *utf8Right) { if (*utf8Left++ != *utf8Right++) return false; }
-   return *utf8Left == '\0' && *utf8Right == '\0'; }
  
 /**  Old-style canonized file path, interval, firstLine ╳ lastLine ∈ [0, ⃨,n-1]. */
  
@@ -940,16 +938,80 @@ private:
     
  };
 
-#pragma mark - Streams
+#pragma mark - Cryptographic Hash
 
+ /**
+  
+  Computes a cryptographic hash value similar to NIST FIPS PUB 180-4:
+  "Secure Hash Standard (SHS)", August 2015.
+  
+  See http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf for details.
+  
+  */
+ 
+ int HwHash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop),
+   void (^completion)(ditriaconta digest));
+ /* int SwHash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop), void
+   (^completion)(ditriaconta digest)); */
+ 
+ MACRO int Hash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop),
+  void (^completion)(ditriaconta digest)) { return HwHash(p, bytes, ping, completion); }
+ 
+ template <typename T>
+ ditriaconta Hash(T *p) {
+     
+     __block ditriaconta res;
+     
+     Hash((uint8_t *)p, sizeof(T), ^(bool &stop) {}, ^(ditriaconta digest) {
+         res.little_endian.lss = digest.little_endian.lss;
+         res.little_endian.mss = digest.little_endian.mss;
+     });
+     
+     return res;
+ }
+
+#pragma mark - The Map
+ 
+ struct MapImpl {
+     MapImpl(bool onlyDigestStoredAsKey);
+     __builtin_int_t count() const;
+     int set(void * key, void * value);
+     int get(void * key, void ** value);
+     int forall(void (^block)(void *key, void **value, bool first, bool last, bool& stop));
+ 😐;
+ 
+ template <typename K, typename V>
+ struct Map : protected MapImpl {
+    Map(bool onlyDigestStoredAsKey = false) : MapImpl(onlyDigestStoredAsKey) { } // bool clone
+    int set(K key, V value) { ditriaconta h = Hash<K>(&key);
+         return MapImpl::set((void *)&h, (void *)value); }
+    int get(K key, V ** value) { ditriaconta h = Hash<K>(&key);
+         return MapImpl::get((void *)&h, (void **)value); }
+    int forall(void (^block)(K key, V *value, bool first, bool last, bool& stop)) {
+         return MapImpl::forall(^(void * key, void **value, bool first,
+            bool last, bool& stop) {
+             block((K)key, (V *)value, first, last, stop);
+         });
+     }
+    int forEach(void (^block)(K key, V *value)) { return forall(^(K key,
+       V *value, bool first, bool last, bool& stop) { block(key, value); }); }
+    V * operator[] (K key) const { V * value; if (get(key, &value)) return value; else return NULL; }
+    Map(std::initializer_list<Tuple<K const, V>> l) {
+        auto it = l.begin(); auto end = l.end();
+        for (; it != end; ++it) set(::get<0>(it), ::get<1>(it));
+    }
+ };
+ 
+#pragma mark - Streams
+ 
  struct Inputstream LONGTOOTH {
     virtual __builtin_int_t read(uint8_t *p, __builtin_int_t maxBytes) = 0;
  };
-
+ 
  struct Outputstream LONGTOOTH {
     virtual __builtin_int_t write(uint8_t *p, __builtin_int_t bytes) = 0;
  };
-
+ 
 #pragma mark - Stream I/O
 
 int
@@ -1029,35 +1091,6 @@ struct TypedExpression {
 };
 
 #define typedIn(anatomy) TypedExpression { anatomy, Optional<Fontsize>::no(), Optional<const char *>::no(), Optional<Color>::no() }
-
-#pragma mark - Cryptographic Hash
-
-/**
- 
- Computes a cryptographic hash value similar to NIST FIPS PUB 180-4:
- "Secure Hash Standard (SHS)", August 2015.
- 
- See http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf for details.
- 
- */
- 
- int HwHash(uint8_t *p, __builtin_uint_t bytes, void (^ping)(bool &stop),
-   void (^completion)(uint64_t digest[4]));
- // int SwHash(uint8_t *p, __builtin_uint_t bytes, void (^ping)(bool &stop), void
- //    (^completion)(uint64_t digest[4]));
- 
- template <typename T>
- MACRO
- sexdeca hash(T *p) {
-     
-     __block sexdeca res;
-     
-     HwHash((uint8_t *)p, sizeof(T), ^(bool &stop) {}, ^(uint64_t digest[4]) {
-         res.sexdeca = _mm_set_epi64x(digest[0], digest[1]);
-     });
-     
-     return res;
- }
 
 #pragma mark - Decorated String in Procrastinative Style
 
@@ -1299,10 +1332,10 @@ namespace ComposingStick {
             Reflection *refl = (Reflection *)get<0>(region);
             while (!IsNull(refl++)) {
                 Type * type = (Type *)std::begin<Type>(refl->type);
-                if (Utf8IsEqual(object.classname(), type->ident)) { // typeinfo ⬷ CEASED_TO_BE_PRONONCED
+                if (EightBitIsEqual(object.classname(), type->ident)) { // typeinfo ⬷ CEASED_TO_BE_PRONONCED
                     for (__builtin_uint_t i = 0; i < type->attrs.count(); i++) {
                         Attribute& a = type->attrs.get(0);
-                        if (Utf8IsEqual(key, a.ident)) { // TODO: Change to unicode string comparision
+                        if (EightBitIsEqual(key, a.ident)) { // TODO: Change to unicode string comparision
                             touchbase((void *)((uint8_t *)&object + a.offset), a.bytes);
                             stop = true;
                         }
