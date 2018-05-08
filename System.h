@@ -765,7 +765,7 @@ private:
  
  MACRO bool Utf8IsEqual(const char *utf8Left, const char *utf8Right) { while
    (*utf8Left && *utf8Right) { if (*utf8Left++ != *utf8Right++) return false; }
-   return true; }
+   return *utf8Left == '\0' && *utf8Right == '\0'; }
  
 /**  Old-style canonized file path, interval, firstLine ╳ lastLine ∈ [0, ⃨,n-1]. */
  
