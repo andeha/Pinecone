@@ -1326,7 +1326,7 @@ namespace ComposingStick {
  {
     // Requires access to the binary we have loaded, linked and currently runs
     extern __builtin_uint_t MachoImageOrdinal(void *pointer);
-    extern int MachOContent(uint64_t imageordinal, const char *segment, const
+    extern int MachOContent(__builtin_uint_t imageordinal, const char *segment, const
       char *section, void (^callback)(RegionPrimitive region, Subring max,
       Subring initial, bool& stop));
     __builtin_uint_t imageordinal = MachoImageOrdinal((void *)(&object));
