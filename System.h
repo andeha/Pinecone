@@ -149,6 +149,7 @@ namespace Naturals {
  
 #ifdef __mips__
     typedef octa uint64_t;
+    typedef octa int64_t;
 #endif
  
 #ifdef __x86_64__
@@ -171,6 +172,8 @@ namespace Naturals {
  typedef union {
 #ifdef __x86_64__
     __m256 ditriaconta;
+     uint32_t eighttetra[8];
+     uint8_t thirtytwobytes[32];
 #endif
     struct { sexdeca lss; sexdeca mss; } little_endian;
     struct { sexdeca mss; sexdeca lss; } big_endian;
@@ -380,9 +383,9 @@ struct AlgebraicCategory {
     } value;
     __builtin_uint_t kind; // ∈ [0, ⃨,k-1]
     Fossilate *optUnit;
-    Optional<Tuple<__builtin_uint_t, char32_t *>> optUnitNameOrIdent;
+    Optional<Tuple<__builtin_int_t, char32_t *>> optUnitNameOrIdent;
     // ↸ But not neccessarily FINAL here...                         ☜😐🔅²
-    Fossilate() { optUnitNameOrIdent = Optional<Tuple<uint64_t, char32_t *>>::no(); }
+    Fossilate() { optUnitNameOrIdent = Optional<Tuple<__builtin_int_t, char32_t *>>::no(); }
  } Fossilate /* == {
     Content {
     machineString,
@@ -949,13 +952,13 @@ MACRO bool EightBitIsEqual(const char *eightBitLeft, const char *eightBitRight) 
   
   */
  
- int HwHash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop),
-   void (^completion)(ditriaconta digest));
- /* int SwHash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop), void
-   (^completion)(ditriaconta digest)); */
+ int HwHash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop), void
+   (^completion)(ditriaconta digest));
+ int SwHash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop), void
+   (^completion)(ditriaconta digest));
  
  MACRO int Hash(uint8_t *p, __builtin_int_t bytes, void (^ping)(bool &stop),
-  void (^completion)(ditriaconta digest)) { return HwHash(p, bytes, ping, completion); }
+  void (^completion)(ditriaconta digest)) { return SwHash(p, bytes, ping, completion); }
  
  template <typename T>
  ditriaconta Hash(T *p) {
@@ -1034,7 +1037,7 @@ int UnicodeToUtf8(char32_t c, void (^completion)(const char *p, int bytes));
 
 namespace Typecase {
     
-    typedef int64_t TypefaceAnatomy;
+    typedef uint32_t TypefaceAnatomy;
     
     BITMASK(TypefaceAnatomy) {
         Bold        = 0b000000000000000000000000001,
