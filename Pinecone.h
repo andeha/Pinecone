@@ -145,7 +145,7 @@ typedef unsigned int        uint32_t;
 typedef int                 int32_t;
 typedef uint64_t            __builtin_uint_t;
 typedef int64_t             __builtin_int_t;
-#define TriboolUnknown 0xFFFFFFFFFFFFFFFF
+#define TriboolUnknown 0xFFFFFFFFFFFFFFFFULL
 #endif
 
 typedef unsigned short      uint16_t;
@@ -222,33 +222,31 @@ namespace std { // The Standard Residual
 
 #pragma mark - Bit Manipulation
 
-MACRO __builtin_uint_t 🔎(__builtin_uint_t var) {
-    return *((__builtin_uint_t *)var); }
+ MACRO __builtin_uint_t 🔎(__builtin_uint_t var) { return *((__builtin_uint_t *)
+  var); }
 
-MACRO __builtin_uint_t&  🔧(__builtin_uint_t var) {
-    return (__builtin_uint_t&)*(__builtin_uint_t *)var; }
+MACRO __builtin_uint_t&  🔧(__builtin_uint_t var) { return (__builtin_uint_t&)
+  *(__builtin_uint_t *)var; }
 
 MACRO __builtin_uint_t TrailingZeros(__builtin_uint_t x) { if (x == 0) { return
-    8*sizeof(x); } __builtin_uint_t zeros = 0, mask = 1; while (!(x&mask)) {
-        zeros++; mask<<=1; } return zeros; }
+  8*sizeof(x); } __builtin_uint_t zeros = 0, mask = 1; while (!(x&mask)) {
+  zeros++; mask<<=1; } return zeros; }
 
 MACRO __builtin_uint_t MaskAndShift(__builtin_uint_t value, __builtin_uint_t
-    mask) { __builtin_uint_t shift = TrailingZeros(mask); return (mask&value)
-    >> shift; }
+  mask) { __builtin_uint_t shift = TrailingZeros(mask); return (mask&value) >>
+  shift; }
 
 MACRO __builtin_uint_t 🔎MaskandShift(__builtin_uint_t var, __builtin_uint_t
-    mask) { return MaskAndShift(🔎(var), mask); }
+  mask) { return MaskAndShift(🔎(var), mask); }
 
 MACRO void 🔧(__builtin_uint_t var, __builtin_uint_t mask, __builtin_uint_t
-      value) { __builtin_uint_t shift = TrailingZeros(mask);
-    __builtin_uint_t secured = value & (mask>>shift);
-    *(__builtin_uint_t *)var &= ~mask;
-    *(__builtin_uint_t *)var |= secured<<shift; }
+  value) { __builtin_uint_t shift = TrailingZeros(mask); __builtin_uint_t
+  secured = value & (mask>>shift); *(__builtin_uint_t *)var &= ~mask;
+  *(__builtin_uint_t *)var |= secured<<shift; }
 
 MACRO void 🔧Toggle(__builtin_uint_t var, __builtin_uint_t mask) {
-    __builtin_uint_t shift = TrailingZeros(mask);
-    __builtin_uint_t secured = mask>>shift;
-    *(__builtin_uint_t *)var ^= secured<<shift; }
+  __builtin_uint_t shift = TrailingZeros(mask); __builtin_uint_t secured =
+  mask>>shift; *(__builtin_uint_t *)var ^= secured<<shift; }
 
 #pragma mark - Contexts for Switch and the '𝐶𝑜𝑟𝑟𝑒𝑐𝑡𝑙𝑦 Implemented Exception™' (i.e setjmp/longjmp)
 
@@ -357,7 +355,7 @@ extern "C" jmp_buf2 * JmpBuf();
    __builtin_va_list arg;               \
    __builtin_va_start(arg, symbol);
 
-#ifdef __knows_spelling //  ☜😐: 🛎 ∨ ✂️
+#ifdef __is_symbolic  //  ☜😐: 🛎 ∨ ✂️
  #define ∧ &&
  #define ∨ ||
  #define ￢ !
@@ -418,10 +416,12 @@ extern "C" { extern const char *tab; extern const char *eol; extern const char
 
 #pragma mark - Fields of Capacitors
 
-typedef __builtin_uint_t metaaddress; struct MemoryRegionDelegate;
+typedef __builtin_uint_t metaaddress;
 
 template <typename T> struct SemanticPointer { T pointer; }; // ⬷ Non-arithmetic
 // ⤤ Do not cast this type back to any other type of pointer
+
+struct MemoryRegionDelegate { struct MemoryRegion; void statistics(); };
 
 struct MemoryRegion {
     
@@ -487,16 +487,15 @@ struct MemoryRegion {
       = ^(__builtin_int_t bytes) { return malloc(bytes); });
     
 😐;
+    
+ struct MemoryView { MemoryRegion * region; __builtin_int_t byteOffset;
+   __builtin_int_t byteCount; };
 
-struct MemoryRegionDelegate {
-    virtual void first(MemoryRegion * region, SemanticPointer<void *> curr) = 0;
-    virtual void next(MemoryRegion * region, SemanticPointer<void *> current, SemanticPointer<void *> later) = 0;
-    virtual void prev(MemoryRegion * region, SemanticPointer<void *> current, SemanticPointer<void *> later) = 0;
-    virtual void last(MemoryRegion * region, SemanticPointer<void *> curr) = 0;
-};
-
-__builtin_int_t SystemInfoPageSize();
+ template <typename T> T * materialize(MemoryView * view) {
+   extern void * 💫(void *); return (T *)💫((void *)view); }
 
 #include <System.h>
+
+__builtin_int_t SystemInfoPageSize();
 
 #endif
