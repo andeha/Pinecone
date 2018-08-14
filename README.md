@@ -6,7 +6,7 @@ Welcome to *Pinecone*, the library operating system for your next internet of th
 - Dynamically resizable memory regions
 - Unicode-, Utf-8 and decorated strings (and terminal I/O for decorated strings)
 - Memory-mapped files (`abduct` and `reflect`)
-- The *pimpl* idiom, `Optional` and `Tuple` classes
+- The *pimpl* idiom, optional (`Opt`) and `Tuple` classes
 - Slim `Vector` and `Map` container templates
 - Reflection API
 
@@ -56,7 +56,7 @@ To print to the console (on macOS) or on UART5 (on PIC32MX/MZ):
 To create amorphous memory areas, write:
 
     Opt<Memoryregion> file = Memoryregion::abduct(1024*1024);
-    if (Memoryregion *region = file.query()) {
+    if (Memoryregion region = *file) {
         uint64_t *p = (uint64_t *)region->pointer(0);
         *p = 0x12;
         __builtin_int_t outsize = region->bytes();
@@ -65,7 +65,7 @@ To create amorphous memory areas, write:
 To open a device-independent Utf-8 text file, write: 
 
     Opt<Memoryregion> file = Memoryregion::reflect("/tmp/utf8_text.txt");
-    if (Memoryregion *region = file.query()) {
+    if (Memoryregion region = *file) {
         const char *p = (const char *)region->pointer(12 /* bytes */);
         printf("%s, size: %d, %x, %b", p, region->bytes(), region->bytes(), region->bytes());
     }
@@ -73,7 +73,7 @@ To open a device-independent Utf-8 text file, write:
 To open a Unicode text file assuming same endianness as used in the processor you are targeting, write:
 
     Opt<Memoryregion> file = Memoryregion::reflect("/tmp/unicode_text.txt");
-    if (MemoryRegion *region = file.query()) {
+    if (Memoryregion region = *file) {
         const char32_t *p = (const char32_t *)region->pointer(12 /* bytes */);
         String s = StringLiteral(Endianness::Native, p, 1024, true);
     } 
