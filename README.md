@@ -55,8 +55,8 @@ To print to the console (on macOS) or on UART5 (on PIC32MX/MZ):
 
 To create amorphous memory areas, write:
 
-    Optional<MemoryRegion> file = MemoryRegion::abduct(1024*1024);
-    if (MemoryRegion *region = file.query()) {
+    Opt<Memoryregion> file = MemoryRegion::abduct(1024*1024);
+    if (Memoryregion *region = file.query()) {
         uint64_t *p = (uint64_t *)region->pointer(0);
         *p = 0x12;
         __builtin_int_t outsize = region->bytes();
@@ -64,15 +64,15 @@ To create amorphous memory areas, write:
 
 To open a device-independent Utf-8 text file, write: 
 
-    Optional<MemoryRegion> file = MemoryRegion::reflect("/tmp/utf8_text.txt");
-    if (MemoryRegion *region = file.query()) {
+    Opt<Memoryregion> file = Memoryregion::reflect("/tmp/utf8_text.txt");
+    if (Memoryregion *region = file.query()) {
         const char *p = (const char *)region->pointer(12 /* bytes */);
         printf("%s, size: %d, %x, %b", p, region->bytes(), region->bytes(), region->bytes());
     }
 
 To open a Unicode text file assuming same endianness as used in the processor you are targeting, write:
 
-    Optional<MemoryRegion> file = MemoryRegion::reflect("/tmp/unicode_text.txt");
+    Opt<Memoryregion> file = Memoryregion::reflect("/tmp/unicode_text.txt");
     if (MemoryRegion *region = file.query()) {
         const char32_t *p = (const char32_t *)region->pointer(12 /* bytes */);
         String s = StringLiteral(Endianness::Native, p, 1024, true);
@@ -89,7 +89,7 @@ Explore streams of Unicode symbols with
     
       __builtin_int_t c = UnicodeCombiningCount(&beam);
         
-      Optional<SemanticPointer<char32_t *>> ahead =
+      Opt<SemanticPointer<char32_t *>> ahead =
         beam.unicodeLook(1, BinaryChoiceToRight);
     
       if (!UnicodeNext(&beam, BinaryChoiceToRight, 1)) 
@@ -107,7 +107,7 @@ And utilize memory protection with:
     Vector<int> v = { 3, 2, 1 };
     int second = v[1];
 
-Additional examples are available in the `UnitTests` directory.
+Additional examples are available in the `Unittests` directory.
 
 ## References
 
