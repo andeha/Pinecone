@@ -55,7 +55,7 @@ To print to the console (on macOS) or on UART5 (on PIC32MX/MZ):
 
 To create amorphous memory areas, write:
 
-    Opt<Memoryregion> file = MemoryRegion::abduct(1024*1024);
+    Opt<Memoryregion> file = Memoryregion::abduct(1024*1024);
     if (Memoryregion *region = file.query()) {
         uint64_t *p = (uint64_t *)region->pointer(0);
         *p = 0x12;
